@@ -30,4 +30,5 @@ const AgencySchema = new mongoose.Schema({
  
 });
 
-module.exports = mongoose.model('Agency', AgencySchema);
+const Agency = mongoose.model('Agency', AgencySchema);
+ module.exports = Agency ; 

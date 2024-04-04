@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Vehicle = require('../models/Vehicle'); // Replace with your vehicle model path
-
+ // salla7 exports 
 // Get all vehicles
 exports.getVehicles = async (req, res) => {
   try {
