@@ -20,11 +20,11 @@ import {
 } from "reactstrap";
 
 // core components
-import CNavbar from "../components/CNavbar.js";
-import Footer from "../components/Footer.js";
+import CNavbar from "../components/CNavbar";
+import Footer from "../components/Footer";
 
 // index page sections
-import Download from "./IndexSections/Download.js";
+import Download from "./IndexSections/Download";
 
 class Landing extends React.Component {
   state = {};

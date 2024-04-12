@@ -19,8 +19,8 @@ import {
 } from "reactstrap";
 
 // core components
-import CNavbar from "../components/CNavbar.js";
-import Footer from "../components/Footer.js";
+import CNavbar from "../components/CNavbar";
+import Footer from "../components/Footer";
 
 class Login extends React.Component {
   componentDidMount() {

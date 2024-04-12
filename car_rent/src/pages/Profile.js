@@ -4,8 +4,8 @@ import React from "react";
 import { Button, Card, Container, Row, Col } from "reactstrap";
 
 // core components
-import CNavbar from "../components/CNavbar.js";
-import Footer from "../components/Footer.js";
+import CNavbar from "../components/CNavbar";
+import Footer from "../components/Footer";
 
 class Profile extends React.Component {
   componentDidMount() {
