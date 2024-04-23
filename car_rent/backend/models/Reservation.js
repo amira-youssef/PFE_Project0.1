@@ -5,10 +5,10 @@ const reservationSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId, 
         required : true ,
     }, 
-    //userId: {
-      //  type : mongoose.Schema.Types.ObjectId, 
-       // required : true ,
-    //}, 
+    userId: {
+       type : mongoose.Schema.Types.ObjectId, 
+       required : true ,
+    }, 
     agencyId: {
         type : mongoose.Schema.Types.ObjectId, 
         required : true ,

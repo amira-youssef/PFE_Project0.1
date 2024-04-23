@@ -1,29 +1,24 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-
-import "./src/assets/vendor/nucleo/css/nucleo.css";
-import "./src/assets/vendor/font-awesome/css/font-awesome.min.css";
-import "./src/assets/scss/argon-design-system-react.scss?v1.1.0";
-
-import Index from "./index.js/Index";
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
-import Register from "./pages/Register";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createRoot } from 'react-dom/client'; // Import for React 18 rendering
+import LoginPage from "./pages/LoginPage";
+import Homepage from "./pages/Homepage";
+import AdminDash from "./pages/AdminDash";
+import ManagerDash from "./pages/ManagerDash";
 
 const App = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/landing" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/home" element={<Homepage />} />
+      <Route path="/admin" element={<AdminDash />} />
+      <Route path="/manager" element={<ManagerDash />} />
     </Routes>
   </BrowserRouter>
 );
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const container = document.getElementById('root');
+const root = createRoot(container); // Create root element for React 18
+root.render(<App />); // Render the App component using createRoot
+
 export default App;

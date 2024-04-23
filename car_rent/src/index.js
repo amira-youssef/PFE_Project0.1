@@ -1,81 +1,17 @@
-import React from "react";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
-// reactstrap components
-import { Container, Row } from "reactstrap";
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
 
-import CNavbar from "./components/CNavbar";
-import Footer from "./components/Footer";
-
-// index page sections
-import Hero from "./IndexSections/Hero";
-import Buttons from "./IndexSections/Buttons";
-import Inputs from "./IndexSections/Inputs";
-import CustomControls from "./IndexSections/CustomControls";
-import Menus from "./IndexSections/Menus";
-import Navbars from "./IndexSections/Navbars";
-import Tabs from "./IndexSections/Tabs";
-import Progress from "./IndexSections/Progress";
-import Pagination from "./IndexSections/Pagination";
-import Pills from "./IndexSections/Pills";
-import Labels from "./IndexSections/Labels";
-import Alerts from "./IndexSections/Alerts";
-import Typography from "./IndexSections/Typography";
-import Modals from "./IndexSections/Modals";
-import Datepicker from "./IndexSections/Datepicker";
-import TooltipPopover from "./IndexSections/TooltipPopover";
-import Carousel from "./IndexSections/Carousel";
-import Icons from "./IndexSections/Icons";
-import Login from "./IndexSections/Login";
-import Download from "./IndexSections/Download";
-
-class Index extends React.Component {
-  componentDidMount() {
-    document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
-    this.refs.main.scrollTop = 0;
-  }
-  render() {
-    return (
-      <>
-        <CNavbar />
-        <main ref="main">
-          <Hero />
-          <Buttons />
-          <Inputs />
-          <section className="section">
-            <Container>
-              <CustomControls />
-              <Menus />
-            </Container>
-          </section>
-          <Navbars />
-          <section className="section section-components">
-            <Container>
-              <Tabs />
-              <Row className="row-grid justify-content-between align-items-center mt-lg">
-                <Progress />
-                <Pagination />
-              </Row>
-              <Row className="row-grid justify-content-between">
-                <Pills />
-                <Labels />
-              </Row>
-              <Alerts />
-              <Typography />
-              <Modals />
-              <Datepicker />
-              <TooltipPopover />
-            </Container>
-          </section>
-          <Carousel />
-          <Icons />
-          <Login />
-          <Download />
-        </main>
-        <Footer />
-      </>
-    );
-  }
-}
-
-export default Index;
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

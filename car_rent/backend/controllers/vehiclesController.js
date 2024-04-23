@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const Vehicle = require('../models/Vehicle'); // Replace with your vehicle model path
- // salla7 exports 
 // Get all vehicles
-exports.getVehicles = async (req, res) => {
+const getVehicles = async (req, res) => {
   try {
     const vehicles = await Vehicle.find();
     res.json(vehicles);
@@ -12,7 +11,7 @@ exports.getVehicles = async (req, res) => {
 };
 
 // Get a specific vehicle by ID
-exports.getVehicleById = async (req, res) => {
+const getVehicleById = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -31,7 +30,7 @@ exports.getVehicleById = async (req, res) => {
 };
 
 // Create a new vehicle
-exports.createVehicle = async (req, res) => {
+const createVehicle = async (req, res) => {
     const { maker, model, year, capacity, type, description, image, pricePerDay, agencyId } = req.body;
 
     // Basic validation
@@ -88,8 +87,7 @@ exports.createVehicle = async (req, res) => {
   
 };
 
-// Update a vehicle by ID
-exports.updateVehicle = async (req, res) => {
+const updateVehicle = async (req, res) => {
   const { id } = req.params;
   const { maker, model, year, capacity, type, description, image, pricePerDay, agencyId } = req.body;
 
@@ -122,7 +120,7 @@ exports.updateVehicle = async (req, res) => {
 };
 
 // Delete a vehicle by ID
-exports.deleteVehicle = async (req, res) => {
+const deleteVehicle = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -140,4 +138,4 @@ exports.deleteVehicle = async (req, res) => {
 }
 };
 
-module.exports = router;
+module.exports = {getVehicles ,getVehicleById ,createVehicle, updateVehicle ,deleteVehicle};
