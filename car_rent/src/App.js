@@ -5,9 +5,12 @@ import LoginPage from "./pages/LoginPage";
 import Homepage from "./pages/Homepage";
 import AdminDash from "./pages/AdminDash";
 import ManagerDash from "./pages/ManagerDash";
+import Navbar from "./components/Navbar";
 
 const App = () => (
   <BrowserRouter>
+        <Navbar />
+
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/home" element={<Homepage />} />

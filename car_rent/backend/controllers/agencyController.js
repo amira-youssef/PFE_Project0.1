@@ -78,5 +78,36 @@ const createAgency = asyncHandler(async (req, res) => {
 });
 
 
+const deleteAgency = async (req, res) => {
 
-module.exports = { createAgency };
+    const { agencyId } = req.params;
+  
+    try {
+      // Find and delete the agency
+      const deletedAgency = await Agency.findByIdAndDelete(agencyId);
+  
+      if (!deletedAgency) {
+        return res.status(404).json({ message: 'Agency not found' });
+      }
+  
+      // Update managers with matching agency ID
+      const updateResult = await User.updateMany(
+        { agencyId },
+        { $set: { agencyId: null, isActive: true } } // Set agencyId to null and isActive to true
+      );
+  
+      if (updateResult.modifiedCount === 0) {
+        console.warn('No users updated for deleted agency'); // Optional warning
+      }
+  
+      res.json({ message: 'Agency deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting agency:', error);
+      res.status(500).json({ message: 'Error deleting agency' });
+    }
+  
+  
+  
+};
+
+module.exports = { createAgency , deleteAgency};
