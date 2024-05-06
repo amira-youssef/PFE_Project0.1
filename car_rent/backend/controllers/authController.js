@@ -3,7 +3,39 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
 
-const login = async (req, res) => {
+const registerUser = async (req, res) => {
+  try {
+    const { nom, prenom, email, password, birthdate } = req.body;
+    const existingUser = await User.findOne({ email });
+    
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Hash the password using bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create and save the new user with the hashed password
+    const newUser = new User({
+      nom: nom,
+      prenom: prenom,
+      email: email,
+      password: hashedPassword,
+      birthdate: birthdate,
+      role: 'user',
+      isActive: true // Set isActive to true for users
+    });
+
+    await newUser.save();
+    console.log("User added successfully !!!");
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+  const login = async (req, res) => {
     const { email, password } = req.body;
   
     // Basic validation (optional)
@@ -45,40 +77,10 @@ const login = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   };
-  
- const registerUser = async (req,res) => {
-    try {
-        const {nom , prenom , email , password , birthdate } = req.body ; 
-    // Check for existing user with the same email
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        return res.status(400).json({ message: 'User already exists' });    }
-  
-    // Hash the password using bcrypt
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    // Create and save the new user
-    const newUser = new User({
-      nom: nom,
-      prenom: prenom,
-      email: email,
-      password: hashedPassword,
-      birthdate: birthdate,
-      role: 'user',
-      isActive: true  // Set isActive to true for users
-    });
-  
-    await newUser.save();
-    console.log("User addded successfully !!!");
-    res.status(201).json({ message: 'User registered successfully' });
 
-} catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-  };
-  
-  
+
+
+
   const registerAgencyManager = async (req , res) => {
     try {
         const {nom , prenom , email , password , birthdate , agence , numTel, buisnessEmail } = req.body ; 
