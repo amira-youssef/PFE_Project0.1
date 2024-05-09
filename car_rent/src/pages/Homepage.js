@@ -1,119 +1,87 @@
-import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
+import React from 'react';
+import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import XIcon from '@mui/icons-material/X';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Header from '../components/Header';
-import MainFeaturedPost from '../components/MainFeaturedPost';
-import FeaturedPost from '../components/FeaturedPost';
-import Main from '../components/Main';
-import Sidebar from '../components/Sidebar';
-import Footer from '../components/Footer';
-import post1 from '../components/blog-post1.md';
-import post2 from '../components/blog-post2.md';
-import post3 from '../components/blog-post3.md';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import SearchBar from '../components/homepage/SearchBar';
+import FeaturedCars from '../components/homepage/FeaturedCars';
+import Testimonials from '../components/homepage/Testimonials';
+import InformationSection from '../components/homepage/InformationSection';
+import FeaturedAgencies from "../components/homepage/FeaturedAgencies";
+import ContactInfo from '../components/homepage/ContactInfo';
 
-const sections = [
-  { title: 'Technology', url: '#' },
-  { title: 'Design', url: '#' },
-  { title: 'Culture', url: '#' },
-  { title: 'Business', url: '#' },
-  { title: 'Politics', url: '#' },
-  { title: 'Opinion', url: '#' },
-  { title: 'Science', url: '#' },
-  { title: 'Health', url: '#' },
-  { title: 'Style', url: '#' },
-  { title: 'Travel', url: '#' },
-];
-
-const mainFeaturedPost = {
-  title: 'Title of a longer featured blog post',
-  description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-  image: 'https://source.unsplash.com/random?wallpapers',
-  imageText: 'main image description',
-  linkText: 'Continue reading…',
-};
-
-const featuredPosts = [
-  {
-    title: 'Featured post',
-    date: 'Nov 12',
-    description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random?wallpapers',
-    imageLabel: 'Image Text',
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
   },
-  {
-    title: 'Post title',
-    date: 'Nov 11',
-    description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
-    image: 'https://source.unsplash.com/random?wallpapers',
-    imageLabel: 'Image Text',
+  section: {
+    marginBottom: theme.spacing(4),
   },
-];
+}));
 
-const posts = [post1, post2, post3];
+const Homepage = () => {
+  const classes = useStyles();
 
-const sidebar = {
-  title: 'About',
-  description:
-    'Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.',
-  archives: [
-    { title: 'March 2020', url: '#' },
-    { title: 'February 2020', url: '#' },
-    { title: 'January 2020', url: '#' },
-    { title: 'November 1999', url: '#' },
-    { title: 'October 1999', url: '#' },
-    { title: 'September 1999', url: '#' },
-    { title: 'August 1999', url: '#' },
-    { title: 'July 1999', url: '#' },
-    { title: 'June 1999', url: '#' },
-    { title: 'May 1999', url: '#' },
-    { title: 'April 1999', url: '#' },
-  ],
-  social: [
-    { name: 'GitHub', icon: GitHubIcon },
-    { name: 'X', icon: XIcon },
-    { name: 'Facebook', icon: FacebookIcon },
-  ],
-};
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
-
-export default function Homepage() {
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <CssBaseline />
-      <Container maxWidth="lg">
-        <Header title="Blog" sections={sections} />
-        <main>
-          <MainFeaturedPost post={mainFeaturedPost} />
-          <Grid container spacing={4}>
-            {featuredPosts.map((post) => (
-              <FeaturedPost key={post.title} post={post} />
-            ))}
+    <div className={classes.root}>
+      {/* Search Bar Section */}
+      <section className={classes.section}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} sm={8} md={6}>
+            <SearchBar />
           </Grid>
-          <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Main title="From the firehose" posts={posts} />
-            <Sidebar
-              title={sidebar.title}
-              description={sidebar.description}
-              archives={sidebar.archives}
-              social={sidebar.social}
-            />
+        </Grid>
+      </section>
+
+      {/* Featured Cars Section */}
+      <section className={classes.section}>
+        <Typography variant="h4" gutterBottom>
+          Featured Cars
+        </Typography>
+        <FeaturedCars />
+      </section>
+
+      <section className={classes.section}>
+        <Typography variant="h4" gutterBottom>
+          Featured Agencies
+        </Typography>
+        <FeaturedAgencies />
+      </section>
+
+      {/* Call to Action Section */}
+      <section className={classes.section}>
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item>
+            <Button variant="contained" color="primary" href="/cars">
+              Browse Cars
+            </Button>
           </Grid>
-        </main>
-      </Container>
-      <Footer
-        title="Footer"
-        description="Something here to give the footer a purpose!"
-      />
-    </ThemeProvider>
+        </Grid>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className={classes.section}>
+        <Typography variant="h4" gutterBottom>
+          Testimonials
+        </Typography>
+        <Testimonials />
+      </section>
+
+      {/* Information Section */}
+      <section className={classes.section}>
+        <InformationSection />
+      </section>
+
+      {/* Contact Information Section */}
+      <section className={classes.section}>
+        <Typography variant="h4" gutterBottom>
+          Contact Us
+        </Typography>
+        <ContactInfo />
+      </section>
+    </div>
   );
-}
+};
+
+export default Homepage;
