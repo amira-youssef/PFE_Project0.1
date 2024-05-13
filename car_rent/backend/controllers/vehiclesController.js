@@ -31,10 +31,10 @@ const getVehicleById = async (req, res) => {
 
 // Create a new vehicle
 const createVehicle = async (req, res) => {
-    const { maker, model, year, capacity, type, description, image, pricePerDay, agencyId } = req.body;
+    const { maker, model, year,boite ,capacity, type, description, image, pricePerDay, agencyId } = req.body;
 
     // Basic validation
-    if (!maker || !model || !year || !capacity || !type || !description || !image || !pricePerDay || !agencyId) {
+    if (!maker || !model || !year || !capacity || !boite || !type || !description || !image || !pricePerDay || !agencyId) {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
   
@@ -64,6 +64,7 @@ const createVehicle = async (req, res) => {
       maker,
       model,
       year,
+      boite,
       capacity,
       type,
       description,
@@ -89,7 +90,7 @@ const createVehicle = async (req, res) => {
 
 const updateVehicle = async (req, res) => {
   const { id } = req.params;
-  const { maker, model, year, capacity, type, description, image, pricePerDay, agencyId } = req.body;
+  const { maker, model, year, boite ,capacity, type, description, image, pricePerDay, agencyId } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: 'Invalid vehicle ID' });
@@ -99,6 +100,7 @@ const updateVehicle = async (req, res) => {
     maker,
     model,
     year,
+    boite,
     capacity,
     type,
     description,

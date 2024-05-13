@@ -38,6 +38,7 @@ const FeaturedCars = () => {
                 <h2>{car.maker} {car.model}</h2>
                 <p>Year: {car.year}</p>
                 <p>Description: {car.description}</p>
+                <p>boite: {car.boite}</p>
                 <p>Price per Day: {car.pricePerDay}</p>
               </CardContent>
             </CardActionArea>

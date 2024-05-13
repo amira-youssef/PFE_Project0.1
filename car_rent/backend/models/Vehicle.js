@@ -9,6 +9,10 @@ const vehicleSchema = new mongoose.Schema({
         type : String, 
         required : true ,
     }, 
+    boite: {
+        type: String,
+        required:true
+    },
     year: {
         type : Number, 
         required : true ,
@@ -38,7 +42,10 @@ const vehicleSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId, 
         required : true ,
     }, 
-   
+   count: {
+        type :number ,
+        default: 0,
+   }
 });
 
 

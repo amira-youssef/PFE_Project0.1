@@ -3,17 +3,16 @@ import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import SearchBar from '../components/homepage/SearchBar';
 import FeaturedCars from '../components/homepage/FeaturedCars';
 import Testimonials from '../components/homepage/Testimonials';
-import InformationSection from '../components/homepage/InformationSection';
 import FeaturedAgencies from "../components/homepage/FeaturedAgencies";
 import ContactInfo from '../components/homepage/ContactInfo';
+import SearchBar from '../components/homepage/SearchBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(0, 10), // Add padding to the sides
   },
   section: {
     marginBottom: theme.spacing(4),
@@ -60,25 +59,19 @@ const Homepage = () => {
         </Grid>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials and Contact Information Sections */}
       <section className={classes.section}>
-        <Typography variant="h4" gutterBottom>
-          Testimonials
-        </Typography>
-        <Testimonials />
-      </section>
+        <Grid container spacing={8}>
+          {/* Testimonials Section */}
+          <Grid item xs={12} sm={6}>
+            <Testimonials />
+          </Grid>
 
-      {/* Information Section */}
-      <section className={classes.section}>
-        <InformationSection />
-      </section>
-
-      {/* Contact Information Section */}
-      <section className={classes.section}>
-        <Typography variant="h4" gutterBottom>
-          Contact Us
-        </Typography>
-        <ContactInfo />
+          {/* Contact Information Section */}
+          <Grid item xs={12} sm={6}>
+            <ContactInfo />
+          </Grid>
+        </Grid>
       </section>
     </div>
   );

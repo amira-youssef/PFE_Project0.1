@@ -77,6 +77,14 @@ const createAgency = asyncHandler(async (req, res) => {
 
 });
 
+const getAllAgencies = async (req, res) => {
+  try {
+    const agencies = await Agency.find();
+    res.status(200).json(agencies);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const deleteAgency = async (req, res) => {
 
@@ -110,4 +118,4 @@ const deleteAgency = async (req, res) => {
   
 };
 
-module.exports = { createAgency , deleteAgency};
+module.exports = { createAgency , deleteAgency , getAllAgencies};

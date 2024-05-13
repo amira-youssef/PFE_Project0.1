@@ -30,6 +30,7 @@ app.use(cors(corsOptions));
 app.use('/api/users', userRoute); 
 app.use('/api/vehicles', vehicleRoute); 
 app.use('/api/agencies', agencyRoute) ; 
+app.use('/api/rents', agencyRoute) ; 
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

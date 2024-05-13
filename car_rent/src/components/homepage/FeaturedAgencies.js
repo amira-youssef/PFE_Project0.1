@@ -23,9 +23,6 @@ const FeaturedAgencies = () => {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
-        Featured Agencies
-      </Typography>
       <Grid container spacing={3}>
         {agencies.map(agency => (
           <Grid item xs={12} sm={6} md={4} key={agency._id}>
@@ -35,10 +32,10 @@ const FeaturedAgencies = () => {
                   {agency.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Location: {agency.location}
+                  Location: {agency.address}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Contact: {agency.contact}
+                  Contact: {agency.phoneNumber} / {agency.email}
                 </Typography>
               </CardContent>
             </Card>
