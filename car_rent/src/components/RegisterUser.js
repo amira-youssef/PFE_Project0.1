@@ -3,66 +3,64 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { useForm } from 'react-hook-form'; // Optional for validation
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import '../style/Registration.css';
 
 function RegisterUser() {
   const {
     register,
     handleSubmit,
-    formState: { errors }, // Access errors from react-hook-form
+    formState: { errors },
     watch,
-    reset, 
-  } = useForm(); // Using react-hook-form for validation (optional)
+    reset,
+  } = useForm();
 
-  const [openSnackbar, setOpenSnackbar] = React.useState(false); // State for snackbar visibility
-  const [snackbarSeverity, setSnackbarSeverity] = React.useState('success'); // State for snackbar severity
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = React.useState('success');
 
   const password = React.useRef({});
   password.current = watch("password", "");
 
   const onSubmit = async (data) => {
     const { password, confirmPassword } = data;
-    
+
     if (password !== confirmPassword) {
-      // Passwords do not match, show error message
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
       return;
     }
-  
+
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/registerU', 
+        'http://localhost:5000/api/users/registerU',
         data,
         { withCredentials: true }
       );
-  
-      if (response.status === 201) { // Check if status is 201 for successful registration
+
+      if (response.status === 201) {
         setOpenSnackbar(true);
         setSnackbarSeverity('success');
-        // Clear form after successful submission
         reset();
       } else {
-        // Handle errors provided by the server
         console.error('Error submitting form:', response.data);
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      console.log('Detailed AxiosError:', error.response.data); // Log detailed error response
+      console.log('Detailed AxiosError:', error.response.data);
       setOpenSnackbar(true);
       setSnackbarSeverity('error');
     }
   };
-  
+
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
 
- 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+      <div className="register-form">
+        <h2>Register as User</h2>
         <TextField
           label="Nom"
           {...register('nom', { required: 'Nom is required' })}

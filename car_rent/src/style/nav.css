@@ -1,0 +1,75 @@
+/* Navbar.css */
+header {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .left .imgs img {
+    cursor: pointer;
+  }
+  
+  .links ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .links ul li button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .links ul li button:hover {
+    text-decoration: underline;
+  }
+  
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .MuiButton-containedPrimary {
+    background-color: #1976d2;
+    color: white;
+    text-transform: none;
+  }
+  
+  .MuiButton-containedPrimary:hover {
+    background-color: #0056b3;
+  }
+  
+  .hide-in-desktop {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .hide-in-mobile {
+      display: none;
+    }
+  
+    .hide-in-desktop {
+      display: inline;
+    }
+  
+    .links {
+      display: none;
+    }
+  }
+  

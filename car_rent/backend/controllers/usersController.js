@@ -11,6 +11,23 @@ const getUsers = async (req, res) => {
     }
   };
 
+  const getUserById = async (req, res) => {
+    const { id } = req.params;
+  
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid User ID' });
+    }
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'user not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
 
   const getManagers = async (req, res) => {
     try {
@@ -110,4 +127,4 @@ const getUsers = async (req, res) => {
   
 
 
-module.exports = {getUsers , getManagers , deleteUser , updateUser , updateManager} ;
+module.exports = {getUsers , getManagers , deleteUser , getUserById ,updateUser , updateManager} ;

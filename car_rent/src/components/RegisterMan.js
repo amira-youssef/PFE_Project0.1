@@ -5,7 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-
+import '../style/Registration.css';
 function RegisterMan() {
   const { register, handleSubmit, formState: { errors }, watch, reset } = useForm();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -46,11 +46,12 @@ function RegisterMan() {
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
-  };
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+};
+
+return(
+	<form onSubmit={handleSubmit(onSubmit)}>
+      <div className="register-form">
         <TextField
           label="Nom"
           {...register('nom', { required: 'Nom is required' })}
@@ -116,14 +117,14 @@ function RegisterMan() {
           open={openSnackbar}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
-        >
+ >
           <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
             {snackbarSeverity === 'success' ? 'Registration successful!' : 'Registration failed'}
           </Alert>
         </Snackbar>
       </div>
     </form>
-  );
+ );
 }
 
 export default RegisterMan;

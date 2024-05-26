@@ -9,7 +9,12 @@ const FeaturedAgencies = () => {
   const [agencies, setAgencies] = useState([]);
 
   useEffect(() => {
-    const fetchAgencies = async () => {
+    fetchAgencies();
+    return () => {
+      setAgencies([]);
+  };
+  }, []);
+   const fetchAgencies = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/agencies/getAll');
         setAgencies(response.data);
@@ -17,10 +22,6 @@ const FeaturedAgencies = () => {
         console.error('Error fetching agencies:', error);
       }
     };
-
-    fetchAgencies();
-  }, []);
-
   return (
     <div>
       <Grid container spacing={3}>

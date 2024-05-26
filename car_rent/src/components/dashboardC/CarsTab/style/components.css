@@ -1,0 +1,73 @@
+/* style/components.css */
+.card {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  padding: 6px;
+  border: 1px solid #ddd;
+  margin-top: auto;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: #fff;
+  width: 80%; /* Increase width to make the card larger */
+  margin: 0 auto 16px; /* Center the card and add bottom margin */
+}
+
+.card__logo {
+  flex: 0 0 150px; /* Increase the size of the logo section */
+  margin-right: 16px;
+}
+
+.card__logo img {
+  width: 100%;
+  height: auto;
+}
+
+.card__data {
+  flex: 1;
+}
+
+.card__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card__name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.card__title a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+
+.card__description {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.card__tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
+.card__icons {
+  position: absolute;
+  top: 10px; /* Adjust the top position as needed */
+  right: 10px; /* Adjust the right position as needed */
+}
+
+/* Style for the icons */
+.icon {
+  font-size: 1.5rem; /* Adjust the size of the icons */
+  margin-left: 10px; /* Add some space between icons */
+  color: #6ba0d8; /* Set the color of the icons */
+}
+

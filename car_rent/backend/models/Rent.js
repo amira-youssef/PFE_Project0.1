@@ -6,12 +6,14 @@ const rentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  personalInformation: {
+ 
+
+  driverInformation: {
     fullName: {
       type: String,
       required: true
     },
-    emailAddress: {
+    email: {
       type: String,
       required: true
     },
@@ -20,25 +22,9 @@ const rentSchema = new mongoose.Schema({
       required: true
     },
     address: {
-      streetAddress: {
         type: String,
         required: true
-      },
-      city: {
-        type: String,
-        required: true
-      },
-      state: {
-        type: String,
-        required: true
-      },
-      zipCode: {
-        type: String,
-        required: true
-      }
-    }
-  },
-  driverInformation: {
+    },
     licenseNumber: {
       type: String,
       required: true
@@ -52,6 +38,23 @@ const rentSchema = new mongoose.Schema({
       required: true
     },
   },
+
+  relationshipToRenter: {
+    type: String,
+    enum: ['family' , 'friend' ],
+    required: true
+  },
+  emergencyContact: {
+    name: {
+      type: String,
+      required: true
+    },
+    phoneNumber: {
+      type: String,
+      required: true
+    }
+  }, 
+
   pickupLocation: {
     type: String,
     required: true
@@ -68,9 +71,9 @@ const rentSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  carID: {
+  vehicleId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Car',
+    ref: 'Vehicle',
     required: true
   },
   price: {
@@ -82,19 +85,9 @@ const rentSchema = new mongoose.Schema({
     enum: ['en ligne', 'sur place'],
     required: true
   },
-  relationshipToRenter: {
+  status: {
     type: String,
-    required: true
-  },
-  emergencyContact: {
-    name: {
-      type: String,
-      required: true
-    },
-    phoneNumber: {
-      type: String,
-      required: true
-    }
+    enum: ['pending', 'accepted', 'rejected'],
   }
 });
 

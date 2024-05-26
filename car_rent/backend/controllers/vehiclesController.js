@@ -140,4 +140,25 @@ const deleteVehicle = async (req, res) => {
 }
 };
 
-module.exports = {getVehicles ,getVehicleById ,createVehicle, updateVehicle ,deleteVehicle};
+const getVehiclesByAgencyId = async (req, res) => {
+  try {
+    const agencyId = req.params.agencyId; // Read agencyId from request parameters
+
+    // Fetch vehicles by agency ID
+    const vehicles = await Vehicle.find({ agencyID: agencyId });
+
+    if (!vehicles) {
+      return res.status(404).json({ message: 'No vehicles found for this agency.' });
+    }
+
+    return res.status(200).json(vehicles);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+module.exports = {getVehicles ,getVehicleById ,createVehicle, updateVehicle ,deleteVehicle ,getVehiclesByAgencyId};

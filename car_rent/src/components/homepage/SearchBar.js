@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@mui/styles'; // Updated import
+import { makeStyles } from '@material-ui/core/styles'; // Updated import
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-  },
+  }
 }));
 
 const SearchBar = () => {
@@ -28,8 +28,8 @@ const SearchBar = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={3}>
+      <Grid container spacing={2} direction="row" alignItems="center">
+        <Grid item >
           <TextField
             id="start-date"
             label="Start Date"
@@ -43,7 +43,7 @@ const SearchBar = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item >
           <TextField
             id="start-time"
             label="Start Time"
@@ -57,7 +57,7 @@ const SearchBar = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item>
           <TextField
             id="end-date"
             label="End Date"
@@ -71,7 +71,7 @@ const SearchBar = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item >
           <TextField
             id="end-time"
             label="End Time"
@@ -85,7 +85,7 @@ const SearchBar = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item>
           <TextField
             id="pick-up-location"
             label="Pick-up Location"
@@ -96,7 +96,7 @@ const SearchBar = () => {
             required
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item>
           <Button variant="contained" color="primary" type="submit">
             Search
           </Button>

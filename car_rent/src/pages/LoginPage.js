@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import axios from 'axios';
+import '../style/LoginPage.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState(''); // Use email instead of username
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // useNavigate hook for navigation
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
@@ -33,11 +36,11 @@ const LoginPage = () => {
       // Redirect based on isAdmin status
       const role = response.data.role;
       if (role === 'admin') {
-        window.location.href = '/adminDash';
+        navigate('/admin');
       } else if (role === 'manager') {
-        window.location.href = '/managerdash';
-      } else {
-        window.location.href = '/home';
+        navigate('/manager');
+      } else if (role === 'user') {
+        navigate('/home');
       }
     } catch (error) {
       console.error('Login error:', error.response?.data?.message);
@@ -48,10 +51,10 @@ const LoginPage = () => {
     <div className="container">
       <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
-        <FormGroup>
+        <FormGroup className="form-group">
           <Label for="email">Email</Label>
           <Input
-            type="text"
+            type="email"
             id="email"
             name="email"
             value={email}
@@ -59,7 +62,7 @@ const LoginPage = () => {
             required
           />
         </FormGroup>
-        <FormGroup>
+        <FormGroup className="form-group">
           <Label for="password">Password</Label>
           <Input
             type="password"
@@ -70,10 +73,13 @@ const LoginPage = () => {
             required
           />
         </FormGroup>
-        <Button type="submit" color="primary">
+        <Button type="submit">
           Login
         </Button>
       </Form>
+      <div className="sign-in-link">
+        <p>Already have an account? <Link to="/register">Sign up</Link></p>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -26,11 +26,7 @@ const Homepage = () => {
     <div className={classes.root}>
       {/* Search Bar Section */}
       <section className={classes.section}>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} sm={8} md={6}>
             <SearchBar />
-          </Grid>
-        </Grid>
       </section>
 
       {/* Featured Cars Section */}

@@ -10,6 +10,12 @@ const FeaturedCars = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
+    fetchCars();
+    return ()=>{
+      setCars([]);
+    };
+  }, []);
+
     const fetchCars = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/vehicles/getAll');
@@ -18,9 +24,6 @@ const FeaturedCars = () => {
         console.error('Error fetching cars:', error);
       }
     };
-
-    fetchCars();
-  }, []);
 
   return (
     <Grid container spacing={2}>
@@ -31,7 +34,7 @@ const FeaturedCars = () => {
               <CardMedia
                 component="img"
                 height="200"
-                image={car.image}
+                image={car.mainImage}
                 alt={car.model}
               />
               <CardContent>

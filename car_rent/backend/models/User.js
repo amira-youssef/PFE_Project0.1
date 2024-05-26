@@ -44,7 +44,10 @@ const userSchema= new mongoose.Schema({
     agencyId: { // New field to store agency association
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Agency' // Reference the Agency model for data integrity
-  }
+    }, 
+    address: {
+        type: String , 
+    },
 
 }); 
 

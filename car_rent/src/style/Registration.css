@@ -1,0 +1,102 @@
+/* Registration.css */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .tab.active {
+    border-bottom: 2px solid #7f0000;
+    font-weight: bold;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+
+  
+  /* RegisterUser.css and RegisterMan.css */
+/* RegisterUser.css */
+.register-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .register-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .register-form .MuiFormControl-root {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .register-form .MuiInputBase-input {
+    padding: 10px;
+  }
+  
+  .register-form .MuiButton-contained {
+    width: 100%;
+    padding: 10px;
+    background-color: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .register-form .MuiButton-contained:hover {
+    background-color: #0056b3;
+  }
+  
+  .register-form .MuiFormLabel-root {
+    color: #1976d2;
+  }
+  
+  .register-form .MuiInput-underline:before {
+    border-bottom-color: #1976d2;
+  }
+  .sign-in-link {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .sign-in-link a {
+    color: #1976d2;
+    text-decoration: none;
+  }
+  
+  .sign-in-link a:hover {
+    text-decoration: underline;
+  }

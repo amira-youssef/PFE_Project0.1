@@ -4,6 +4,8 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import RegisterUser from '../components/RegisterUser';
 import RegisterMan from '../components/RegisterMan';
+import '../style/Registration.css';
+import { Link } from 'react-router-dom';
 
 export default function Registration() {
   const [value, setValue] = React.useState('one');
@@ -13,13 +15,14 @@ export default function Registration() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', maxWidth: 600, margin: '0 auto', mt: 4, p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: '#fff' }}>
       <Tabs
         value={value}
         onChange={handleChange}
         textColor="secondary"
         indicatorColor="secondary"
         aria-label="secondary tabs example"
+        centered
       >
         <Tab value="one" label="Register as User" />
         <Tab value="two" label="Register as Manager" />
@@ -35,6 +38,10 @@ export default function Registration() {
           <RegisterMan />
         </Box>
       )}
+
+        <div className="sign-in-link">
+          <p>Already have an account? <Link to="/login">Sign in</Link></p>
+        </div>  
     </Box>
   );
 }
