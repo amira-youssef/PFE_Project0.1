@@ -1,57 +1,91 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './CarsList.css';
+import HeroPages from './HeroPages';
 
 const CarsList = () => {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
     fetchCars();
-    return ()=>{
+    return () => {
       setCars([]);
     };
   }, []);
 
-    const fetchCars = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/vehicles/getAll');
-        setCars(response.data);
-      } catch (error) {
-        console.error('Error fetching cars:', error);
-      }
-    };
+  const fetchCars = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/vehicles/getAll');
+      setCars(response.data);
+    } catch (error) {
+      console.error('Error fetching cars:', error);
+    }
+  };
 
   return (
-    <Grid container spacing={2}>
+
+    
+    <div>
+      <div>
+      <HeroPages name="Vehicle Models" />    
+      </div>
+    
+
+    <Grid  spacing={2} >
       {cars.map((car) => (
-        <Grid item xs={12} sm={6} md={4} key={car._id}>
-          <Card>
-          <Link to={`/cars/${car._id}`}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="200"
-                image={car.mainImage}
-                alt={car.model}
-              />
-              <CardContent>
-                <h2>{car.maker} {car.model}</h2>
-                <p>Year: {car.year}</p>
-                <p>Description: {car.description}</p>
-                <p>boite: {car.boite}</p>
-                <p>Price per Day: {car.pricePerDay}</p>
-              </CardContent>
-            </CardActionArea>
-            </Link>
-          </Card>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={car._id}>
+          <section className="models-section">
+            <div className="models-div">
+              <div className="models-div__box">
+                <div className="models-div__box__img">
+                  <img src={car.mainImage} alt="car_img" />
+                </div>
+                <div className="models-div__box__descr">
+                  <div className="models-div__box__descr__name-price">
+                    <div className="models-div__box__descr__name-price__name">
+                      <p>{car.maker} {car.model}</p>
+                      <span>
+                        <i className="fa-solid fa-star"></i>
+                        <i className="fa-solid fa-star"></i>
+                        <i className="fa-solid fa-star"></i>
+                        <i className="fa-solid fa-star"></i>
+                        <i className="fa-solid fa-star"></i>
+                      </span>
+                    </div>
+                    <div className="models-div__box__descr__name-price__price">
+                      <h4>{car.pricePerDay} Dt</h4>
+                      <p>per day</p>
+                    </div>
+                  </div>
+                  <div className="models-div__box__descr__name-price__details">
+                    <span>
+                      <i className="fa-solid fa-car-side"></i> &nbsp;{car.maker}
+                    </span>
+                    <span style={{ textAlign: 'right' }}>
+                    {car.type}&nbsp; <i className="fa-solid fa-car-side"></i>
+                    </span>
+                    <span>
+                      <i className="fa-solid fa-car-side"></i> &nbsp; {car.boite}
+                    </span>
+                    <span style={{ textAlign: 'right' }}>
+                      {car.year} &nbsp; <i className="fa-solid fa-car-side"></i>
+                    </span>
+                  </div>
+                  <div className="models-div__box__descr__btn">
+                    <Link onClick={() => window.scrollTo(0, 0)} to={`/cars/${car._id}`}>
+                      Book Ride
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </Grid>
       ))}
     </Grid>
+    </div>
   );
 };
 

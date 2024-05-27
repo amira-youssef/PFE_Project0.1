@@ -8,7 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { format } from 'date-fns';
 
 function Card({
   _id,
@@ -29,6 +28,7 @@ function Card({
   unavailableDates
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const handleExpand = () => {
     setIsModalOpen(true);
@@ -37,12 +37,15 @@ function Card({
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-
-  const isDateUnavailable = (date) => {
-    return unavailableDates.some(unavailableDate => 
-      format(unavailableDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
-    );
+  const toggleDescription = () => {
+    setIsDescriptionExpanded(!isDescriptionExpanded);
   };
+
+  //const isDateUnavailable = (date) => {
+  //  return unavailableDates.some(unavailableDate => 
+  //    format(unavailableDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+  //  );
+  //};
 
   return (
     <div key={_id} className='card'>
@@ -59,11 +62,23 @@ function Card({
           </div>
         </div>
         <div className='card__description'>
-          {description}
+          {description.length > 100 && !isDescriptionExpanded ? (
+            <>
+              {description.substring(0, 100)}...
+              <span className="read-more" onClick={toggleDescription}><strong>Read more</strong></span>
+            </>
+          ) : (
+            <>
+              {description}
+              {description.length > 100 && (
+                <span className="read-less" onClick={toggleDescription}><strong>Read less</strong></span>
+              )}
+            </>
+          )}
         </div>
       </div>
       <div className='card__tags'>
-        <Tag name={type} addTagHandler={() => addTagHandler('type', type)} />
+        <Tag className='tag' name={type} addTagHandler={() => addTagHandler('type', type)} />
         <Tag name={year} addTagHandler={() => addTagHandler('year', year)} />
         <Tag name={boite} addTagHandler={() => addTagHandler('boite', boite)} />
       </div>
@@ -75,25 +90,28 @@ function Card({
 
       {/* Modal component for the popup */}
       <CarModal show={isModalOpen} onClose={handleCloseModal}>
-        <h2>{maker} {model}</h2>
-        <p><strong>Year:</strong> {year}</p>
-        <p><strong>Capacity:</strong> {capacity}</p>
-        <p><strong>Boite:</strong> {boite}</p>
-        <p><strong>Description:</strong> {description}</p>
-        <p><strong>Price Per Day:</strong> {pricePerDay}</p>
-        <p><strong>Count:</strong> {count}</p>
-        {/* Include any other details or images */}
-        <div className='modal-images'>
-          <img src={image1} alt={`${maker} ${model} - 1`} />
-          <img src={image2} alt={`${maker} ${model} - 2`} />
-          <img src={image3} alt={`${maker} ${model} - 3`} />
-        </div>
-        <div className='modal-calendar'>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DateCalendar 
-              shouldDisableDate={isDateUnavailable} 
-            />
-          </LocalizationProvider>
+        <div className="modal-content">
+          <h2>{maker} {model}</h2>
+          <p><strong>Year:</strong> {year}</p>
+          <p><strong>Capacity:</strong> {capacity}</p>
+          <p><strong>Boite:</strong> {boite}</p>
+          <p><strong>Description:</strong> {description}</p>
+          <p><strong>Price Per Day:</strong> {pricePerDay}</p>
+          <p><strong>Rents:</strong> {count}</p>
+          <p><strong>Type:</strong> {type}</p>
+          <div className='modal-images'>
+            <img src={image1} alt={`${maker} ${model} - 1`} />
+            <img src={image2} alt={`${maker} ${model} - 2`} />
+            <img src={image3} alt={`${maker} ${model} - 3`} />
+          </div>
+          <div className='modal-calendar'>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DateCalendar 
+                //shouldDisableDate={isDateUnavailable}
+                className="date-calendar"
+              />
+            </LocalizationProvider>
+          </div>
         </div>
       </CarModal>
     </div>

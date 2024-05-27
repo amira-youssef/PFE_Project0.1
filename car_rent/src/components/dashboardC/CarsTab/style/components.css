@@ -3,14 +3,15 @@
   display: flex;
   position: relative;
   flex-direction: row;
-  padding: 6px;
+  padding: 10px;
+  border-width: 10px;
   border: 1px solid #ddd;
-  margin-top: auto;
-  margin-bottom: 16px;
+  border-left: 20px solid #6ba0d8 ;
+  margin: auto;
+  margin-top: 65px;
   border-radius: 8px;
   background-color: #fff;
-  width: 80%; /* Increase width to make the card larger */
-  margin: 0 auto 16px; /* Center the card and add bottom margin */
+  width: 70%; /* Increase width to make the card larger */
 }
 
 .card__logo {
@@ -55,6 +56,17 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #aff4e1;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  width: auto;
 }
 
 

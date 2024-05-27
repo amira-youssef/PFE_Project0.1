@@ -1,0 +1,43 @@
+.hero-pages {
+    width: 100%;
+    height: 30rem;
+    background-image: url("/src/assets/hero/heroes-bg.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+  .hero-pages__overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.92);
+  }
+  .hero-pages__text {
+    display: flex;
+    flex-direction: column;
+    z-index: 3;
+    position: relative;
+    width: 100%;
+    height: 41rem;
+    justify-content: center;
+    color: #010103;
+  }
+  .hero-pages__text h3 {
+    font-size: 3.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero-pages__text p {
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+  .hero-pages__text p a {
+    color: #010103;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .hero-pages__text p a:hover {
+    color: #ff4d30;
+  }
