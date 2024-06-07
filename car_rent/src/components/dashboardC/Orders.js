@@ -24,7 +24,7 @@ export default function Orders() {
   useEffect(() => {
     const fetchData = async () => {
 
-    const agencyId = userData.agencyId; // Assume the agencyId is stored in local storage
+    const agencyId = userData?.agencyId; // Assume the agencyId is stored in local storage
     if (!agencyId) {
       console.error('No agencyId found in local storage.');
       return;
@@ -32,11 +32,11 @@ export default function Orders() {
 
     try {
       const response = await axios.get(`http://localhost:5000/api/rents/getAllbyAgency/${agencyId}`);
-      const data = response.data;
-      const rows = data.map((rent) =>
+      const data = response?.data;
+      const rows = data?.map((rent) =>
         createData(
-          rent._id,
-          new Date(rent.pickupDateTime).toLocaleDateString(),
+          rent?._id,
+          new Date(rent?.pickupDateTime).toLocaleDateString(),
           rent.driverInformation.fullName,
           rent.pickupLocation,
           rent.paymentMethod,
@@ -91,8 +91,8 @@ export default function Orders() {
 
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
-      <Table size="small">
+      <Title>Rent Requests</Title>
+      <Table size="small" style={{ height: '450px'}}>
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>

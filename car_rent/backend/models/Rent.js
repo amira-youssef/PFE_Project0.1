@@ -88,7 +88,9 @@ const rentSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['pending', 'accepted', 'rejected'],
-  }
+  },
+  hidden: { type: Boolean, default: false },
+
 });
 
 const Rent = mongoose.model('Rent', rentSchema);

@@ -6,7 +6,7 @@
   padding: 10px;
   border-width: 10px;
   border: 1px solid #ddd;
-  border-left: 20px solid #6ba0d8 ;
+  border-left: 20px solid #6ba0d8;
   margin: auto;
   margin-top: 65px;
   border-radius: 8px;
@@ -25,25 +25,25 @@
 }
 
 .card__data {
-  flex: 1;
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--neutral-dot);
+  padding-bottom: 1rem;
 }
 
 .card__heading {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 1rem;
 }
 
 .card__name {
   font-size: 18px;
   font-weight: bold;
 }
-
-.card__title a {
-  color: #007BFF;
-  text-decoration: none;
-}
-
 
 .card__description {
   margin-top: 8px;
@@ -69,7 +69,6 @@
   width: auto;
 }
 
-
 .card__icons {
   position: absolute;
   top: 10px; /* Adjust the top position as needed */
@@ -83,3 +82,123 @@
   color: #6ba0d8; /* Set the color of the icons */
 }
 
+.card__title {
+  font-weight: var(--fw-700);
+  font-size: 22px;
+  color: var(--neutral-900);
+}
+
+.card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card__title a:hover {
+  color: var(--primary-400);
+}
+
+.card__meta {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: var(--neutral-700);
+}
+
+.card__meta span:not(:first-child)::before {
+  content: '';
+  width: 0.25rem;
+  aspect-ratio: 1;
+  margin-right: 0.75rem;
+  border-radius: 50%;
+  background-color: var(--neutral-dot);
+}
+
+.card__tag s {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-self: end;
+}
+
+.filter__panel {
+  position: relative;
+  top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card__tag {
+  display: flex;
+  align-items: center;
+  background-color: hsl(var(--primary-400-hsl) / 10%);
+  color: var(--primary-400);
+  border: 0;
+  border-radius: 0.25rem;
+  padding: 0;
+  font-weight: var(--fw-700);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.card__tag-name {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(160, 241, 214, 0.553);
+  border-radius: 0.25rem;
+}
+
+.card__tag-delete {
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0 0.25rem 0.25rem 0;
+  padding: 0 0.5rem;
+  background-color: rgba(160, 241, 214, 0.553);
+  cursor: pointer;
+  transition: 175ms;
+}
+
+.card__tag-delete:hover {
+  background-color: var(--neutral-900);
+}
+
+.card__tag-hover {
+  cursor: pointer;
+  transition: 175ms;
+}
+
+.card__tag-hover:hover {
+  background-color: var(--primary-400);
+  color: #fff;
+}
+
+.btn__reset {
+  margin: 0;
+  border: 0;
+  padding: 0.25rem 0.5rem;
+  background-color: transparent;
+  color: var(--neutral-700);
+  cursor: pointer;
+  font-weight: var(--fw-700);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.card--hidden {
+  border-left: 5px solid red;
+}
+
+.tag--red {
+  background-color: red;
+  color: white;
+}

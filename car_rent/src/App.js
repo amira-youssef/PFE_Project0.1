@@ -12,6 +12,9 @@ import { render } from "react-dom";
 import CarsPage from "./pages/CarsPage";
 import Layout from "./components/layout/layout";
 import CarDisplay from "./pages/CarDisplay";
+import AgenciesList from "./pages/AgenciesList";
+import AgencyForm from "./pages/AgencyForm";
+
 
 const App = () => (
   <BrowserRouter>
@@ -24,6 +27,11 @@ const App = () => (
         <Route path="/rent" element={<RentPage/>} />
         <Route path="/cars" element={<CarsPage/>} />
         <Route path="/cars/:id" element={<CarDisplay/>} />
+        <Route path="/agencies" element={<AgenciesList/>} />
+        <Route path="/create" element={< AgencyForm/>} />
+
+
+
         </Route>
         <Route path="/register" element={<Registration />} />
         <Route path="/login" element={<LoginPage />} />

@@ -7,7 +7,7 @@ const Layout= () => {
     
       <>
       <Navbar />
-      <div style={{ margin: '50px'}}>
+      <div style={{ margin: '0px'}}>
        <Outlet />
       </div>
       </>  

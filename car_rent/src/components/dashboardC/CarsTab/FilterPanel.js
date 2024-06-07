@@ -1,15 +1,15 @@
 import Filter from './Filter';
+import './style/layout.css'
 
 const FilterPanel = ({
   type,
-  level,
-  languages,
-  tools,
+  maker,
+  boite,
   removeTagHandler,
   resetTagsHandler,
 }) => {
   return (
-    <div className="container filter__panel">
+    <div className=" filter__panel">
       <div className="filter">
         <div className="card__tags">
           {type && (
@@ -18,29 +18,19 @@ const FilterPanel = ({
               removeTagHandler={() => removeTagHandler('type', type)}
             ></Filter>
           )}
-          {level && (
+          {maker && (
             <Filter
-              name={level}
-              removeTagHandler={() => removeTagHandler('level', level)}
+              name={maker}
+              removeTagHandler={() => removeTagHandler('maker', maker)}
+            ></Filter>
+          )}
+          {boite && (
+            <Filter
+              name={boite}
+              removeTagHandler={() => removeTagHandler('boite', boite)}
             ></Filter>
           )}
 
-          {languages.length > 0 &&
-            languages.map((language) => (
-              <Filter
-                key={language}
-                name={language}
-                removeTagHandler={() => removeTagHandler('languages', language)}
-              />
-            ))}
-          {tools.length > 0 &&
-            tools.map((tool) => (
-              <Filter
-                key={tool}
-                name={tool}
-                removeTagHandler={() => removeTagHandler('tools', tool)}
-              />
-            ))}
         </div>
         <button className="btn__reset" onClick={resetTagsHandler}>
           Clear

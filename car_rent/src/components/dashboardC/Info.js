@@ -10,7 +10,7 @@ export default function Info() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const id = userData._id;
+      const id = userData?._id;
       if (!id) {
         console.error('No Manager Id found in local storage.');
         return;
@@ -25,7 +25,7 @@ export default function Info() {
     };
 
     fetchData();
-  }, [userData._id]);
+  }, [userData?._id]);
 
   if (!managerData) {
     return <div>Loading...</div>;
@@ -33,18 +33,18 @@ export default function Info() {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Title>{managerData.agence} Agency</Title>
+      <Title>{managerData?.agence} Agency</Title>
       <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-        Welcome, {managerData.prenom}
+        Welcome, {managerData?.prenom}
       </Typography>
       <Typography variant="body1" color="textSecondary" gutterBottom>
-        Business Email: {managerData.buisnessEmail}
+        Business Email: {managerData?.buisnessEmail}
       </Typography>
       <Typography variant="body1" color="textSecondary" gutterBottom>
-        Email: {managerData.email}
+        Email: {managerData?.email}
       </Typography>
       <Typography variant="body1" color="textSecondary">
-        Phone Number: {managerData.numTel}
+        Phone Number: {managerData?.numTel}
       </Typography>
     </Box>
   );

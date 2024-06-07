@@ -6,6 +6,7 @@ function Tag({ name, addTagHandler }) {
       onClick={addTagHandler}
     >
       <span className="card__tag-name">{name}</span>
+      
     </button>
   );
 }

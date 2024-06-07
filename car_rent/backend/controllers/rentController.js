@@ -1,6 +1,8 @@
 const Rent = require('../models/Rent'); // Adjust the path as necessary
 const Vehicle = require('../models/Vehicle'); // Adjust the path as necessary
 const mongoose = require('mongoose');
+const sendEmail = require('../services/emailService')
+
 
 const createRent = async (req, res) => {
   try {
@@ -36,8 +38,11 @@ const createRent = async (req, res) => {
       ...rentData,
       status: 'pending',
     });
-
+    
     console.log("New Rent Entry:", newRent);
+
+    const testEmail = sendEmail(rentData.driverInformation.email , 'subject' , 'message haja');
+    console.log(testEmail);
 
     await newRent.save();
 
@@ -166,11 +171,41 @@ const deleteRent = async (req, res) => {
 
 
 
+const getRentDatesByVehicleId = async (req, res) => {
+  const { vehicleId } = req.params;
+  console.log("Received vehicle ID:", vehicleId); // Log the received vehicle ID
+
+  if (!mongoose.Types.ObjectId.isValid(vehicleId)) {
+    return res.status(400).json({ message: 'Invalid vehicle ID format' });
+  }
+
+  try {
+    const rents = await Rent.find({ vehicleId , hidden: false}).select('startDate endDate');
+
+    if (!rents.length) {
+      return res.status(404).json({ message: 'No rent records found for this vehicle.' });
+    }
+
+    const formattedRents = rents.map(rent => ({
+      startDate: rent.startDate,
+      endDate: rent.endDate,
+    }));
+
+    return res.status(200).json(formattedRents);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
 module.exports = {
   createRent,
   getRentsByAgencyId,
   getRentsByVehicleId,
   getRentsByUserId,
   updateRentStatus,
-  deleteRent
+  deleteRent,
+  getRentDatesByVehicleId
 };

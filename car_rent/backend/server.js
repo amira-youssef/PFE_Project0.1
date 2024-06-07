@@ -4,10 +4,23 @@ const userRoute = require ('./routes/users');
 const vehicleRoute = require ('./routes/vehicles'); 
 const agencyRoute = require('./routes/agencies');
 const rentRoute = require('./routes/rents');
+const maintRoute = require('./routes/maintenances')
 const cors = require('cors');
+const path = require('path'); // Import the path module
+
+
+//mail imports
+const nodemailer = require('nodemailer');
+const creds = require('./config');
+//
+
+
 
 const app= express(); 
 const PORT= process.env.PORT || 5000;
+
+
+app.use('/uploads', express.static('uploads')); // Serve the uploads folder
 
 
 mongoose.connect('mongodb://localhost:27017/car_rent', {
@@ -32,8 +45,12 @@ app.use('/api/users', userRoute);
 app.use('/api/vehicles', vehicleRoute); 
 app.use('/api/agencies', agencyRoute) ; 
 app.use('/api/rents', rentRoute) ; 
+app.use('/api/maint', maintRoute) ; 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
   
+

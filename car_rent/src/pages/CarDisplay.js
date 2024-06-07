@@ -21,7 +21,10 @@ function CarDisplay() {
   const { id } = useParams();
 
   useEffect(() => {
-    const fetchCarDetails = async () => {
+    fetchCarDetails().then();
+  }, [id]);
+  
+const fetchCarDetails = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/vehicles/getById/${id}`);
         setAllData(response.data);
@@ -30,9 +33,6 @@ function CarDisplay() {
         console.error("Error fetching car details:", error);
       }
     };
-    fetchCarDetails();
-  }, [id]);
-
   useEffect(() => {
     if (startDate && endDate && allData) {
       const calculatedPrice = calculatePrice(startDate, endDate, allData.pricePerDay);
@@ -141,23 +141,7 @@ function CarDisplay() {
         </section>
       </Container>
       <footer className="attribution">
-        Challenge by{" "}
-        <a
-          href="https://www.frontendmentor.io?ref=challenge"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Frontend Mentor
-        </a>
-        . Coded by{" "}
-        <a
-          href="https://github.com/Abdelghafour122"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Abdelghafour122
-        </a>
-        .
+      
       </footer>
     </main>
   );

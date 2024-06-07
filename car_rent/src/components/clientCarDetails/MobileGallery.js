@@ -5,6 +5,7 @@ import NextIcon from "../Icons/NextIcon";
 import PreviousIcon from "../Icons/PreviousIcon";
 import { useParams } from "react-router-dom";
 
+
 const MobileGallery = () => {
   const [images, setImages] = useState([]);
   const [currentMobileImage, setCurrentMobileImage] = useState("");

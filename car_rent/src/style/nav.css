@@ -10,6 +10,10 @@ header {
     justify-content: space-between;
     align-items: center;
   }
+  .navbar-logo {
+    height: 70px; /* Adjust the height as needed */
+  }
+  
   
   .left .imgs img {
     cursor: pointer;

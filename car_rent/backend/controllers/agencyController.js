@@ -3,6 +3,10 @@ const mongoose = require('mongoose'); // Assuming mongoose is installed
 
 const Agency = require('../models/Agency'); // Assuming your Agency model is in a file named Agency.js in the models directory
 const User = require('../models/User');
+
+
+
+
 // Function to create a new agency
 const createAgency = asyncHandler(async (req, res) => {
   const { name, address, city, state, zipCode, phoneNumber, email } = req.body;
@@ -44,7 +48,7 @@ const createAgency = asyncHandler(async (req, res) => {
       email
     });
 
-    console.log('Received data 2:', req.body);
+    console.log('Agency Created Successfully !! ', req.body);
 
     // Check if user has the required role (e.g., "manager")
     if (user.role !== 'manager') {

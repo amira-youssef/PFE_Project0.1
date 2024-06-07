@@ -124,7 +124,27 @@ const getUsers = async (req, res) => {
       res.status(500).json({ message: 'Error updating user' });
     }
   };
+
+
+  const toggleActive = async (req, res) => {
+    const { userId } = req.params;
+    const { isActive } = req.body;
+  
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+  
+    try {
+      const user = await User.findByIdAndUpdate(userId, { isActive }, { new: true });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
   
 
 
-module.exports = {getUsers , getManagers , deleteUser , getUserById ,updateUser , updateManager} ;
+module.exports = {getUsers , getManagers , deleteUser , getUserById ,updateUser , updateManager , toggleActive} ;

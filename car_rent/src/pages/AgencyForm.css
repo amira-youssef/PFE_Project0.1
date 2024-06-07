@@ -1,0 +1,124 @@
+.agency-form-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .agency-form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .error-message,
+  .success-message {
+    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+  }
+  
+  .error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  .success-message {
+    color: #2a6817;
+    background-color: #c3fabe;
+  }
+  
+  .agency-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #777;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccd7e6;
+    border-radius: 4px;
+    color: #333;
+  }
+  
+  .submit-button {
+    padding: 1rem;
+    font-size: 1.2rem;
+    color: white;
+    background-color: #ff5330;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submit-button:hover {
+    background-color: #e04a25;
+  }
+  
+  @media (max-width: 768px) {
+    .agency-form-container {
+      padding: 1.5rem;
+    }
+  
+    .agency-form-container h2 {
+      font-size: 1.8rem;
+    }
+  
+    .form-group label {
+      font-size: 1rem;
+    }
+  
+    .form-group input {
+      font-size: 0.9rem;
+    }
+  
+    .submit-button {
+      font-size: 1rem;
+      padding: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .agency-form-container {
+      padding: 1rem;
+    }
+  
+    .agency-form-container h2 {
+      font-size: 1.5rem;
+    }
+  
+    .form-group label {
+      font-size: 0.9rem;
+    }
+  
+    .form-group input {
+      font-size: 0.8rem;
+    }
+  
+    .submit-button {
+      font-size: 0.9rem;
+      padding: 0.7rem;
+      background-color: hsl(26, 100%, 55%) ;
+    }
+  }
+  

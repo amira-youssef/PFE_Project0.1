@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Tag from './Tag';
 import CarModal from './CarModal';
+import AddMaintModal from '../MaintTab/AddMaintModal';
+import CalendarModal from './CalendarModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faExpand, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faExpand, faTrash, faTools, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import './style/components.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,31 +27,57 @@ function Card({
   image3,
   pricePerDay,
   count,
+  address,
   addTagHandler,
-  unavailableDates
+  unavailableDates,
+  hidden
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCarModalOpen, setIsCarModalOpen] = useState(false);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
   const handleExpand = () => {
-    setIsModalOpen(true);
+    setIsCarModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseCarModal = () => {
+    setIsCarModalOpen(false);
   };
+
+  const handleOpenMaintenanceModal = () => {
+    setIsMaintenanceModalOpen(true);
+  };
+
+  const handleCloseMaintenanceModal = () => {
+    setIsMaintenanceModalOpen(false);
+  };
+
+  const handleOpenCalendarModal = () => {
+    setIsCalendarModalOpen(true);
+  };
+
+  const handleCloseCalendarModal = () => {
+    setIsCalendarModalOpen(false);
+  };
+
   const toggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
   };
 
-  //const isDateUnavailable = (date) => {
-  //  return unavailableDates.some(unavailableDate => 
-  //    format(unavailableDate, 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
-  //  );
-  //};
+  const handleDelete = async () => {
+    if (window.confirm('There is no going back after doing this action (this will hide the car for users), Are you sure about hiding this Car?')) {
+      try {
+        await axios.put(`http://localhost:5000/api/vehicles/hide/${_id}`);
+        window.location.reload();
+      } catch (error) {
+        console.error('Error hiding vehicle:', error);
+      }
+    }
+  };
 
   return (
-    <div key={_id} className='card'>
+    <div key={_id} className={`card ${hidden ? 'card--hidden' : ''}`}>
       <div className='card__logo'>
         <img src={mainImage} alt={`${maker} ${model}`} />
       </div>
@@ -81,15 +110,16 @@ function Card({
         <Tag className='tag' name={type} addTagHandler={() => addTagHandler('type', type)} />
         <Tag name={year} addTagHandler={() => addTagHandler('year', year)} />
         <Tag name={boite} addTagHandler={() => addTagHandler('boite', boite)} />
+        {hidden && <span className='tag tag--red'>Dismissed</span>}
       </div>
       <div className='card__icons'>
-        <FontAwesomeIcon icon={faEdit} className='icon' />
+        {!hidden && <FontAwesomeIcon icon={faEdit} className='icon' />}
         <FontAwesomeIcon icon={faExpand} className='icon' onClick={handleExpand} />
-        <FontAwesomeIcon icon={faTrash} className='icon' />
+        {!hidden && <FontAwesomeIcon icon={faTrash} className='icon' onClick={handleDelete} />}
+        {!hidden && <FontAwesomeIcon icon={faTools} className='icon' onClick={handleOpenMaintenanceModal} />}
+        <FontAwesomeIcon icon={faCalendarAlt} className='icon' onClick={handleOpenCalendarModal} />
       </div>
-
-      {/* Modal component for the popup */}
-      <CarModal show={isModalOpen} onClose={handleCloseModal}>
+      <CarModal show={isCarModalOpen} onClose={handleCloseCarModal}>
         <div className="modal-content">
           <h2>{maker} {model}</h2>
           <p><strong>Year:</strong> {year}</p>
@@ -99,21 +129,17 @@ function Card({
           <p><strong>Price Per Day:</strong> {pricePerDay}</p>
           <p><strong>Rents:</strong> {count}</p>
           <p><strong>Type:</strong> {type}</p>
+          <p><strong>Address:</strong> {address}</p>
           <div className='modal-images'>
-            <img src={image1} alt={`${maker} ${model} - 1`} />
-            <img src={image2} alt={`${maker} ${model} - 2`} />
+            <img src={mainImage} alt={`${maker} ${model} - 1`} />
+            <img src={image2} alt={`${maker} ${model} - 1`} />
+            <img src={image1} alt={`${maker} ${model} - 2`} />
             <img src={image3} alt={`${maker} ${model} - 3`} />
-          </div>
-          <div className='modal-calendar'>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DateCalendar 
-                //shouldDisableDate={isDateUnavailable}
-                className="date-calendar"
-              />
-            </LocalizationProvider>
           </div>
         </div>
       </CarModal>
+      <AddMaintModal show={isMaintenanceModalOpen} onClose={handleCloseMaintenanceModal} vehicleId={_id} />
+      <CalendarModal show={isCalendarModalOpen} onClose={handleCloseCalendarModal} vehicleId={_id} />
     </div>
   );
 }

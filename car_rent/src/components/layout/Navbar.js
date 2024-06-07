@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import menu from "../../assets/Pictures/icon-menu.svg";
 import logo from "../../assets/Pictures/logo.svg";
@@ -61,7 +61,15 @@ const Navbar = () => {
               }}
             />
             <MobileLinksDrawer onHandleOpen={handleOpen} onOpen={open} />
-            <img src={logo} alt="logo" />
+            <div className="navbar-brand">
+        <Link to="/">
+          <img 
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaQ7HJNRI6T7SljDS6RptFDpXBPY3IOZwQyQ&s" 
+            alt="Brand Logo" 
+            className="navbar-logo"
+          />
+        </Link>
+      </div>
           </div>
           <div className="links hide-in-mobile">
             <ul>
@@ -70,6 +78,15 @@ const Navbar = () => {
               </li>
               <li>
                 <button onClick={() => handleNavClick("/cars")}>Cars</button>
+              </li>
+              <li>
+                <button onClick={() => handleNavClick("/agencies")}>Agencies</button>
+              </li>
+              <li>
+                <button onClick={() => handleNavClick("/agencies")}>Contact Us</button>
+              </li>
+              <li>
+                <button onClick={() => handleNavClick("/agencies")}>How to ?</button>
               </li>
               {/* Add more navigation links if needed */}
             </ul>
@@ -87,7 +104,7 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <Button variant="contained" color="primary" onClick={handleLogin}>
+            <Button variant="contained" color="primary" style={{'backgroundColor': '#ff4d30'}} onClick={handleLogin}>
               Login
             </Button>
           )}

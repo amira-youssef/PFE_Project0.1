@@ -8,6 +8,8 @@ import Testimonials from '../components/homepage/Testimonials';
 import FeaturedAgencies from "../components/homepage/FeaturedAgencies";
 import ContactInfo from '../components/homepage/ContactInfo';
 import SearchBar from '../components/homepage/SearchBar';
+import Hero from '../components/homepage/Hero';
+import BookCar from '../components/homepage/BookCar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,10 +25,11 @@ const Homepage = () => {
   const classes = useStyles();
 
   return (
+    <><Hero />
     <div className={classes.root}>
       {/* Search Bar Section */}
       <section className={classes.section}>
-            <SearchBar />
+        <BookCar />
       </section>
 
       {/* Featured Cars Section */}
@@ -48,7 +51,7 @@ const Homepage = () => {
       <section className={classes.section}>
         <Grid container spacing={3} justifyContent="center">
           <Grid item>
-            <Button variant="contained" color="primary" href="/cars">
+            <Button variant="contained" color="primary" style={{'background-color': '#ff4d30'}}  href="/cars">
               Browse Cars
             </Button>
           </Grid>
@@ -69,7 +72,7 @@ const Homepage = () => {
           </Grid>
         </Grid>
       </section>
-    </div>
+    </div></>
   );
 };
 

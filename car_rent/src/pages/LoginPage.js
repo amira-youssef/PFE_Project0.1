@@ -5,17 +5,16 @@ import '../style/LoginPage.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState(''); // Use email instead of username
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // useNavigate hook for navigation
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
-    // Simulate login API call (replace with your actual API call)
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/users/login', // Corrected URL
+        'http://localhost:5000/api/users/login',
         {
           email,
           password,
@@ -27,19 +26,15 @@ const LoginPage = () => {
 
       console.log('Login successful:', response.data);
 
-      // Set isLoggedIn to true and store it in local storage
       localStorage.setItem('isLoggedIn', true);
+      localStorage.setItem('userData', JSON.stringify(response.data.user || response.data.token));
 
-      // Consider storing only necessary user info or a token in local storage
-      localStorage.setItem('userData', JSON.stringify(response.data.user || response.data.token)); // Example
-
-      // Redirect based on isAdmin status
-      const role = response.data.role;
+      const role = response.data.user.role;
       if (role === 'admin') {
         navigate('/admin');
       } else if (role === 'manager') {
         navigate('/manager');
-      } else if (role === 'user') {
+      } else {
         navigate('/home');
       }
     } catch (error) {
@@ -48,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container">
+    <div className="login-container">
       <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
         <FormGroup className="form-group">
@@ -73,12 +68,12 @@ const LoginPage = () => {
             required
           />
         </FormGroup>
-        <Button type="submit">
+        <Button type="submit" className="login-button">
           Login
         </Button>
       </Form>
       <div className="sign-in-link">
-        <p>Already have an account? <Link to="/register">Sign up</Link></p>
+        <p>Don't have an account? <Link to="/register">Sign up</Link></p>
       </div>
     </div>
   );

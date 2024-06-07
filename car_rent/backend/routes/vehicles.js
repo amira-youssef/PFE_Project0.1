@@ -6,9 +6,12 @@ const router = express.Router();
 // Routes for vehicles
 router.get('/getAll', vehiclesController.getVehicles);
 router.get('/getById/:id', vehiclesController.getVehicleById);
-router.get('/getByAgId/:id', vehiclesController.getVehiclesByAgencyId);
+router.get('/getByAgId/:agencyId', vehiclesController.getVehiclesByAgencyId);
 router.post('/create', vehiclesController.createVehicle);
-router.put('/:id/update', vehiclesController.updateVehicle);
-router.delete('/:id/delete', vehiclesController.deleteVehicle);
+router.put('/update/:id', vehiclesController.updateVehicle);
+router.post('/upload', vehiclesController.uploadFile);
+router.put('/hide/:id', vehiclesController.hideVehicle);
+
+
 
 module.exports = router;

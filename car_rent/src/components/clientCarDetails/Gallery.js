@@ -72,7 +72,7 @@ const Gallery = () => {
                 }}
               >
                 <div className={`outlay ${index === 0 && "activated"}`}></div>
-                <img src={th} alt={`product-${index + 1}`}  style={{ width: "100%", height: "auto" }} />
+                <img src={th} alt={`product-${index + 1}`}  style={{ "object-fit": "contain" }} />
               </div>
             );
           })}
