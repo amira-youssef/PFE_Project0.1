@@ -28,7 +28,6 @@ const createMaintenance = async (req, res) => {
       res.status(500).json({ message: error.message });
     }
 };
-
 const getMaintDatesByVehicleId = async (req, res) => {
   const { vehicleId } = req.params;
 
@@ -37,13 +36,9 @@ const getMaintDatesByVehicleId = async (req, res) => {
   }
 
   try {
-    // reduce
     const maintenances = await Maintenance.find({ vehicleId, hidden: false }).select('type startDate endDate');
+    console.log("Fetched maintenances:", maintenances);
 
-    if (!maintenances.length) {
-      return res.status(404).json({ message: 'No maintenance records found for this vehicle.' });
-    }
-    //map
     const formattedMaintenances = maintenances.map(maintenance => ({
       maintenanceType: maintenance.type,
       startDate: maintenance.startDate,
@@ -56,6 +51,7 @@ const getMaintDatesByVehicleId = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 const getTotalMaintenanceCostByVehicleId = async (req, res) => {
   const { vehicleId } = req.params;

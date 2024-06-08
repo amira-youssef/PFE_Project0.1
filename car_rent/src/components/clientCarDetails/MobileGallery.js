@@ -5,7 +5,6 @@ import NextIcon from "../Icons/NextIcon";
 import PreviousIcon from "../Icons/PreviousIcon";
 import { useParams } from "react-router-dom";
 
-
 const MobileGallery = () => {
   const [images, setImages] = useState([]);
   const [currentMobileImage, setCurrentMobileImage] = useState("");
@@ -16,10 +15,15 @@ const MobileGallery = () => {
     const fetchImages = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/vehicles/getById/${id}`);
-        // Assuming your API response contains an array of image URLs
-        const { mainImage, image1, image2, image3 } = response.data;
-        setImages([mainImage, image1, image2, image3]);
-        setCurrentMobileImage(mainImage);
+        const vehicle = response.data;
+        const imagesWithUpdatedPaths = [
+          vehicle.mainImage && `http://localhost:5000/${vehicle.mainImage}`,
+          vehicle.image1 && `http://localhost:5000/${vehicle.image1}`,
+          vehicle.image2 && `http://localhost:5000/${vehicle.image2}`,
+          vehicle.image3 && `http://localhost:5000/${vehicle.image3}`,
+        ].filter(Boolean); // Filter out undefined values
+        setImages(imagesWithUpdatedPaths);
+        setCurrentMobileImage(imagesWithUpdatedPaths[0]);
       } catch (error) {
         console.error("Error fetching images:", error);
       }

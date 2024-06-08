@@ -14,6 +14,7 @@ import Layout from "./components/layout/layout";
 import CarDisplay from "./pages/CarDisplay";
 import AgenciesList from "./pages/AgenciesList";
 import AgencyForm from "./pages/AgencyForm";
+import UserProfile from "./pages/UserProfile";
 
 
 const App = () => (
@@ -29,6 +30,7 @@ const App = () => (
         <Route path="/cars/:id" element={<CarDisplay/>} />
         <Route path="/agencies" element={<AgenciesList/>} />
         <Route path="/create" element={< AgencyForm/>} />
+        <Route path="/profile" element={< UserProfile/>} />
 
 
 

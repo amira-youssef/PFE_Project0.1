@@ -9,6 +9,7 @@ const Gallery = () => {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
   const [thumbs, setThumbs] = useState([]);
+  const { id } = useParams();
 
   const handleClick = (index) => {
     setCurrentImage(images[index]);
@@ -28,25 +29,31 @@ const Gallery = () => {
         node.childNodes[0].classList.remove("activated");
     });
   };
-  const { id } = useParams();
 
   useEffect(() => {
     // Fetch data from your backend API
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/vehicles/getById/${id}`);
-        // Assuming your API response contains an array of image URLs
-        const { mainImage, image1, image2, image3 } = response.data;
-        setImages([mainImage, image1, image2, image3]);
-        setThumbs([mainImage, image1, image2, image3]);
-        setCurrentImage(mainImage);
-        setCurrentPassedImage(mainImage);
+        // Assuming your API response contains an object with image URLs
+        const vehicle = response.data;
+        const imagesWithUpdatedPaths = [
+          `http://localhost:5000/${vehicle.mainImage}`,
+          `http://localhost:5000/${vehicle.image1}`,
+          `http://localhost:5000/${vehicle.image2}`,
+          `http://localhost:5000/${vehicle.image3}`,
+        ];
+
+        setImages(imagesWithUpdatedPaths);
+        setThumbs(imagesWithUpdatedPaths);
+        setCurrentImage(imagesWithUpdatedPaths[0]);
+        setCurrentPassedImage(imagesWithUpdatedPaths[0]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   return (
     <section className="gallery-holder hide-in-mobile">
@@ -60,22 +67,20 @@ const Gallery = () => {
           currentPassedImage={currentPassedImage}
         />
         <div className="thumbnails">
-          {thumbs.map((th, index) => {
-            return (
-              <div
-                className="img-holder"
-                key={index}
-                onClick={(e) => {
-                  handleClick(index);
-                  removeActivatedClass(e.currentTarget.parentNode);
-                  e.currentTarget.childNodes[0].classList.toggle("activated");
-                }}
-              >
-                <div className={`outlay ${index === 0 && "activated"}`}></div>
-                <img src={th} alt={`product-${index + 1}`}  style={{ "object-fit": "contain" }} />
-              </div>
-            );
-          })}
+          {thumbs.map((th, index) => (
+            <div
+              className="img-holder"
+              key={index}
+              onClick={(e) => {
+                handleClick(index);
+                removeActivatedClass(e.currentTarget.parentNode);
+                e.currentTarget.childNodes[0].classList.toggle("activated");
+              }}
+            >
+              <div className={`outlay ${index === 0 ? "activated" : ""}`}></div>
+              <img src={th} alt={`product-${index + 1}`} style={{ objectFit: "contain" }} />
+            </div>
+          ))}
         </div>
       </section>
     </section>

@@ -14,6 +14,7 @@ const CalendarModal = ({ show, onClose, vehicleId }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       console.log("Fetching events for vehicle ID:", vehicleId);
+      
       try {
         const rentsResponse = await axios.get(`http://localhost:5000/api/rents/getRentDates/${vehicleId}`);
         console.log("Rents response:", rentsResponse.data);
@@ -23,9 +24,11 @@ const CalendarModal = ({ show, onClose, vehicleId }) => {
 
         const rents = rentsResponse.data.map(rent => ({
           title: 'Rent',
-          start: rent.startDate,
-          end: rent.endDate,
+          start: new Date(rent.startDate),
+          end: new Date(rent.endDate),
           allDay: true,
+          type: 'rent',
+          status: rent.status
         }));
 
         const maintenances = maintenancesResponse.data.map(maintenance => ({
@@ -33,6 +36,8 @@ const CalendarModal = ({ show, onClose, vehicleId }) => {
           start: new Date(maintenance.startDate),
           end: new Date(maintenance.endDate),
           allDay: true,
+          type: 'maintenance',
+          hidden: maintenance.hidden
         }));
 
         setEvents([...rents, ...maintenances]);
@@ -46,6 +51,23 @@ const CalendarModal = ({ show, onClose, vehicleId }) => {
     }
   }, [show, vehicleId]);
 
+  const eventPropGetter = (event) => {
+    let backgroundColor;
+    if (event.type === 'rent') {
+      if (event.status === 'accepted') {
+        backgroundColor = 'green';
+      } else if (event.status === 'pending') {
+        backgroundColor = 'yellow';
+      } else if (event.status === 'discarded' || event.status === 'suspended') {
+        backgroundColor = 'red';
+      }
+    } else if (event.type === 'maintenance') {
+      backgroundColor = event.hidden ? 'red' : 'blue';
+    }
+
+    return { style: { backgroundColor } };
+  };
+
   if (!show) return null;
 
   return (
@@ -58,6 +80,7 @@ const CalendarModal = ({ show, onClose, vehicleId }) => {
           startAccessor="start"
           endAccessor="end"
           style={{ height: 500 }}
+          eventPropGetter={eventPropGetter}
         />
       </div>
     </Modal>

@@ -18,7 +18,15 @@ const CarsList = () => {
   const fetchCars = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/vehicles/getAll');
-      setCars(response.data);
+      const setUpdatedImagePaths= response.data.map(vehicle => ({
+        ...vehicle,
+        mainImage: `http://localhost:5000/${vehicle.mainImage}`,
+        image1: `http://localhost:5000/${vehicle.image1}`,
+        image2: `http://localhost:5000/${vehicle.image2}`,
+        image3: `http://localhost:5000/${vehicle.image3}`,
+        
+      }));
+      setCars(setUpdatedImagePaths);
     } catch (error) {
       console.error('Error fetching cars:', error);
     }

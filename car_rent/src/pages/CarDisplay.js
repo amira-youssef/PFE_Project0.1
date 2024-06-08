@@ -10,10 +10,8 @@ import { Link, useParams } from "react-router-dom";
 import { calculatePrice } from "../utils/calculatePrice";
 import 'react-datepicker/dist/react-datepicker.css';
 
-
-
 function CarDisplay() {
-  const [allData, setAllData] = useState(null);
+  const [carData, setCarData] = useState(null);
   const [datesSelected, setDatesSelected] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -21,27 +19,35 @@ function CarDisplay() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetchCarDetails().then();
+    fetchCarDetails();
   }, [id]);
-  
-const fetchCarDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/vehicles/getById/${id}`);
-        setAllData(response.data);
-        console.log(id);
-      } catch (error) {
-        console.error("Error fetching car details:", error);
-      }
-    };
+
+  const fetchCarDetails = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/vehicles/getById/${id}`);
+      const vehicle = response.data;
+      const vehicleWithUpdatedImagePaths = {
+        ...vehicle,
+        mainImage: `http://localhost:5000/${vehicle.mainImage}`,
+        image1: `http://localhost:5000/${vehicle.image1}`,
+        image2: `http://localhost:5000/${vehicle.image2}`,
+        image3: `http://localhost:5000/${vehicle.image3}`,
+      };
+      setCarData(vehicleWithUpdatedImagePaths);
+    } catch (error) {
+      console.error("Error fetching car details:", error);
+    }
+  };
+
   useEffect(() => {
-    if (startDate && endDate && allData) {
-      const calculatedPrice = calculatePrice(startDate, endDate, allData.pricePerDay);
+    if (startDate && endDate && carData) {
+      const calculatedPrice = calculatePrice(startDate, endDate, carData.pricePerDay);
       setPrice(calculatedPrice);
       setDatesSelected(true);
     } else {
       setDatesSelected(false);
     }
-  }, [startDate, endDate, allData]);
+  }, [startDate, endDate, carData]);
 
   const buttonStyle = {
     pointerEvents: datesSelected ? 'auto' : 'none',
@@ -56,7 +62,7 @@ const fetchCarDetails = async () => {
     display: 'inline-block',
   };
 
-  if (!allData) {
+  if (!carData) {
     return <p>Loading car details...</p>;
   }
 
@@ -64,38 +70,38 @@ const fetchCarDetails = async () => {
     <main className="App">
       <Container component="section" maxWidth={"xl"}>
         <section className="core">
-          <Gallery />
-          <MobileGallery />
+          <Gallery images={[carData.mainImage, carData.image1, carData.image2, carData.image3]} />
+          <MobileGallery images={[carData.mainImage, carData.image1, carData.image2, carData.image3]} />
           <section className="description">
             <p className="pre">Car Details</p>
             <h1>Car Description</h1>
-            <p className="desc">{allData.description}</p>
+            <p className="desc">{carData.description}</p>
             <div className="car-details" style={{ marginTop: "20px" }}>
               <table className="car-details-table" style={{ width: "100%", borderCollapse: "collapse" }}>
                 <tbody>
                   <tr>
                     <th style={{ textAlign: "left", backgroundColor: "#f2f2f2", padding: "8px", borderBottom: "1px solid #ddd" }}>Maker</th>
-                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{allData.maker}</td>
+                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{carData.maker}</td>
                   </tr>
                   <tr>
                     <th style={{ textAlign: "left", backgroundColor: "#f2f2f2", padding: "8px", borderBottom: "1px solid #ddd" }}>Model</th>
-                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{allData.model}</td>
+                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{carData.model}</td>
                   </tr>
                   <tr>
                     <th style={{ textAlign: "left", backgroundColor: "#f2f2f2", padding: "8px", borderBottom: "1px solid #ddd" }}>Year</th>
-                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{allData.year}</td>
+                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{carData.year}</td>
                   </tr>
                   <tr>
                     <th style={{ textAlign: "left", backgroundColor: "#f2f2f2", padding: "8px", borderBottom: "1px solid #ddd" }}>Capacity</th>
-                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{allData.capacity}</td>
+                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{carData.capacity}</td>
                   </tr>
                   <tr>
                     <th style={{ textAlign: "left", backgroundColor: "#f2f2f2", padding: "8px", borderBottom: "1px solid #ddd" }}>Type</th>
-                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{allData.type}</td>
+                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{carData.type}</td>
                   </tr>
                   <tr>
                     <th style={{ textAlign: "left", backgroundColor: "#f2f2f2", padding: "8px", borderBottom: "1px solid #ddd" }}>Price Per Day</th>
-                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{allData.pricePerDay} DT</td>
+                    <td style={{ padding: "8px", borderBottom: "1px solid #ddd" }}>{carData.pricePerDay} DT</td>
                   </tr>
                 </tbody>
               </table>
@@ -127,13 +133,12 @@ const fetchCarDetails = async () => {
                   <p>Total Price: {price} DT</p>
                 </div>
                 <div className="buttons">
-                <Link 
-                  to={`/rent?id=${id}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}&price=${price}`}
-                  style={buttonStyle}
-                >
-                  Rent Car
-                </Link>
-
+                  <Link 
+                    to={`/rent?id=${id}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}&price=${price}`}
+                    style={buttonStyle}
+                  >
+                    Rent Car
+                  </Link>
                 </div>
               </div>
             </div>
@@ -141,7 +146,6 @@ const fetchCarDetails = async () => {
         </section>
       </Container>
       <footer className="attribution">
-      
       </footer>
     </main>
   );

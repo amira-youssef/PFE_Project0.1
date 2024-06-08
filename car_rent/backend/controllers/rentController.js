@@ -41,9 +41,7 @@ const createRent = async (req, res) => {
     
     console.log("New Rent Entry:", newRent);
 
-    const testEmail = sendEmail(rentData.driverInformation.email , 'subject' , 'message haja');
-    console.log(testEmail);
-
+   
     await newRent.save();
 
     // Increment vehicle count
@@ -107,17 +105,37 @@ const getRentsByUserId = async (req, res) => {
 
     // Validate userId
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: 'Invalid userId' });
+      return res.status(400).json({ message: 'Invalid user ID format' });
     }
 
-    // Find all rents by userId
-    const rents = await Rent.find({ userId });
+    // Fetch rents by user ID and populate vehicle details
+    const rents = await Rent.find({ userId }).populate('vehicleId', 'maker model mainImage');
 
-    res.status(200).json(rents);
+    if (!rents.length) {
+      return res.status(404).json({ message: 'No rent records found for this user.' });
+    }
+
+    // Transform data to include maker, model, and mainImage from vehicle
+    const transformedRents = rents.map(rent => ({
+      _id: rent._id,
+      vehicleId: rent.vehicleId._id,
+      userId: rent.userId,
+      pickupDateTime: rent.pickupDateTime,
+      returnDateTime: rent.returnDateTime,
+      status: rent.status,
+      hidden: rent.hidden,
+      maker:  rent.vehicleId.maker ,
+      model:  rent.vehicleId.model ,
+      mainImage:  rent.vehicleId.mainImage ,
+    }));
+
+    return res.status(200).json(transformedRents);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 const updateRentStatus = async (req, res) => {
@@ -138,6 +156,19 @@ const updateRentStatus = async (req, res) => {
 
     if (!updatedRent) {
       return res.status(404).json({ message: 'Rent not found' });
+    }
+
+    // Send email based on status
+    if (status === 'accepted') {
+      const emailMessage = 'Your rent request has been accepted. ';
+      const emailSubject = 'Rent Request Accepted';
+      const testEmail = await sendEmail(updatedRent.driverInformation.email, emailSubject, emailMessage);
+      console.log('Acceptance email sent:', testEmail);
+    } else if (status === 'rejected') {
+      const emailMessage = 'Your rent request has been rejected. ';
+      const emailSubject = 'Rent Request Rejected';
+      const testEmail = await sendEmail(updatedRent.driverInformation.email, emailSubject, emailMessage);
+      console.log('Rejection email sent:', testEmail);
     }
 
     res.status(200).json(updatedRent);
@@ -168,9 +199,6 @@ const deleteRent = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
-
 const getRentDatesByVehicleId = async (req, res) => {
   const { vehicleId } = req.params;
   console.log("Received vehicle ID:", vehicleId); // Log the received vehicle ID
@@ -180,15 +208,13 @@ const getRentDatesByVehicleId = async (req, res) => {
   }
 
   try {
-    const rents = await Rent.find({ vehicleId , hidden: false}).select('startDate endDate');
-
-    if (!rents.length) {
-      return res.status(404).json({ message: 'No rent records found for this vehicle.' });
-    }
+    const rents = await Rent.find({ vehicleId }).select('pickupDateTime returnDateTime status');
+    console.log("Fetched rents:", rents);
 
     const formattedRents = rents.map(rent => ({
-      startDate: rent.startDate,
-      endDate: rent.endDate,
+      startDate: rent.pickupDateTime,
+      endDate: rent.returnDateTime,
+      status: rent.status
     }));
 
     return res.status(200).json(formattedRents);
