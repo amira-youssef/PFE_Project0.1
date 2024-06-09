@@ -35,51 +35,48 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+const login = async (req, res) => {
+  const { email, password } = req.body;
 
-  const login = async (req, res) => {
-    const { email, password } = req.body;
-  
-    // Basic validation (optional)
-    if (!email || !password) {
-      console.error('Missing email or password in login request');
-      return res.status(400).json({ message: 'Please provide email and password' });
+  // Basic validation
+  if (!email || !password) {
+    console.error('Missing email or password in login request');
+    return res.status(400).json({ message: 'Please provide email and password' });
+  }
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.error('Invalid email or password');
+      return res.status(401).json({ message: 'Invalid email or password' }); // Unauthorized
     }
-  
-    try {
-      // Find user by email
-      const user = await User.findOne({ email });
-      if (!user) {
-        console.error('Invalid email or password');
-        return res.status(401).json({ message: 'Invalid email or password' }); // Unauthorized
-      }
-  
-      // Check if account is inactive
-      if (!user.isActive) {
-        return res.status(403).json({ message: 'Your account is still inactive. Please wait for approval.' }); // Forbidden
-      }
-  
-      // Compare password hashes (use bcrypt.compare)
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        console.error('Invalid password');
-        return res.status(401).json({ message: 'Invalid email or password' }); // Unauthorized
-      }
-  
-      const jwtSecret = process.env.JWT_SECRET;
 
-  
-      // Assuming you have a variable `userId` containing the user's ID
-      const token = jwt.sign({ _id: user._id }, jwtSecret , { expiresIn: '30m' }); // Replace '30m' with your desired expiration time
-  
-      console.log(`User ${user.email} logged in successfully`);
-      res.json({ token, user: { ...user._doc, password: undefined, role: user.role } });
-    } catch (error) {
-      console.error('Error during login:', error);
-      res.status(500).json({ message: 'Server error' });
+    // Check if account is inactive
+    if (!user.isActive) {
+      console.log('Account is inactive');
+      return res.status(403).json({ message: 'Your account is still inactive. Please wait for approval.' }); // Forbidden
     }
-  };
 
+    // Compare password hashes
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      console.error('Invalid password');
+      return res.status(401).json({ message: 'Invalid email or password' }); // Unauthorized
+    }
 
+    const jwtSecret = process.env.JWT_SECRET;
+
+    // Generate JWT token
+    const token = jwt.sign({ _id: user._id }, jwtSecret, { expiresIn: '30m' }); // Replace '30m' with your desired expiration time
+
+    console.log(`User ${user.email} logged in successfully`);
+    res.json({ token, user: { ...user._doc, password: undefined, role: user.role } });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
   const registerAgencyManager = async (req , res) => {

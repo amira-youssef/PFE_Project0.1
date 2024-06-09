@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserEdit, faUserPlus, faTrashAlt, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faUserEdit, faUserPlus, faTrashAlt, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import AddUserModal from './AddUserModal';
 
 function FilterableUsers() {
@@ -42,12 +42,12 @@ function FilterableUsers() {
     }
   };
 
-  const handleActivateManager = async (userId) => {
+  const handleToggleActiveManager = async (userId, isActive) => {
     try {
-      await axios.patch(`http://localhost:5000/api/users/toggleActive/${userId}`, { isActive: true });
+      await axios.patch(`http://localhost:5000/api/users/toggleActive/${userId}`, { isActive });
       fetchUsers();
     } catch (error) {
-      console.error('Error activating manager:', error);
+      console.error(`Error ${isActive ? 'activating' : 'rejecting'} manager:`, error);
     }
   };
 
@@ -77,12 +77,13 @@ function FilterableUsers() {
               <tr>
                 <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Name</th>
                 <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Email</th>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
                 <tr key={user._id}>
-                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{user.name}</td>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{user.nom} {user.prenom}</td>
                   <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{user.email}</td>
                   <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
                     <button
@@ -119,38 +120,54 @@ function FilterableUsers() {
             <tbody>
               {managers.map((manager) => (
                 <tr key={manager._id}>
-                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{manager.name}</td>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{manager.nom} {manager.prenom}</td>
                   <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{manager.email}</td>
                   <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
-                    {!manager.isActive && (
+                    {!manager.isActive ? (
+                      <>
+                        <button
+                          onClick={() => handleToggleActiveManager(manager._id, true)}
+                          style={{
+                            backgroundColor: '#28a745',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '5px 10px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            marginRight: '10px',
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCheck} /> Activate
+                        </button>
+                        <button
+                          onClick={() => handleToggleActiveManager(manager._id, false)}
+                          style={{
+                            backgroundColor: '#dc3545',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '5px 10px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faTimes} /> Reject
+                        </button>
+                      </>
+                    ) : (
                       <button
-                        onClick={() => handleActivateManager(manager._id)}
+                        onClick={() => handleDeleteUser(manager._id)}
                         style={{
-                          backgroundColor: '#28a745',
+                          backgroundColor: '#dc3545',
                           color: '#fff',
                           border: 'none',
                           padding: '5px 10px',
                           borderRadius: '5px',
                           cursor: 'pointer',
-                          marginRight: '10px',
                         }}
                       >
-                        <FontAwesomeIcon icon={faCheck} /> Activate
+                        <FontAwesomeIcon icon={faTrashAlt} /> Delete
                       </button>
                     )}
-                    <button
-                      onClick={() => handleDeleteUser(manager._id)}
-                      style={{
-                        backgroundColor: '#dc3545',
-                        color: '#fff',
-                        border: 'none',
-                        padding: '5px 10px',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrashAlt} /> Delete
-                    </button>
                   </td>
                 </tr>
               ))}

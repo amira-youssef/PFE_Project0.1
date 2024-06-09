@@ -127,7 +127,6 @@ const getUsers = async (req, res) => {
     }
   };
 
-
   const toggleActive = async (req, res) => {
     const { userId } = req.params;
     const { isActive } = req.body;
@@ -141,12 +140,19 @@ const getUsers = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
+  
+      const emailSubject = isActive ? 'Account Activation' : 'Account Rejection';
+      const emailMessage = isActive 
+        ? 'Your account has been activated. You can now log in and start using the system.'
+        : 'Your account activation request has been rejected. Please contact support for more information.';
+  
+      await sendEmail(user.email, emailSubject, emailMessage);
+  
       res.json(user);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   };
   
-
 
 module.exports = {getUsers , getManagers , deleteUser , getUserById ,updateUser , updateManager , toggleActive} ;
