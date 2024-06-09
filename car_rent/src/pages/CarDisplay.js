@@ -11,6 +11,7 @@ import { calculatePrice } from "../utils/calculatePrice";
 import 'react-datepicker/dist/react-datepicker.css';
 
 function CarDisplay() {
+  const [disabledDates, setDisabledDates] = useState([]);
   const [carData, setCarData] = useState(null);
   const [datesSelected, setDatesSelected] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -37,6 +38,58 @@ function CarDisplay() {
     } catch (error) {
       console.error("Error fetching car details:", error);
     }
+  };
+
+  useEffect(() => {
+    const fetchUnavailablePeriods = async () => {
+      try {
+        const rentsResponse = await axios.get(`http://localhost:5000/api/rents/getRentDates/${id}`);
+        const maintenanceResponse = await axios.get(`http://localhost:5000/api/maint/getMaintDatesByVehicleId/${id}`);
+    
+        const carReservationDates = rentsResponse.data.map(item => ({
+          startDate: new Date(item.startDate),
+          endDate: new Date(item.endDate)
+        }));
+    
+        const maintenanceDates = maintenanceResponse.data.map(item => ({
+          startDate: new Date(item.startDate),
+          endDate: new Date(item.endDate)
+        }));
+    
+        const allDates = [...carReservationDates, ...maintenanceDates];
+    
+        const disabled = [];
+        allDates.forEach(dateRange => {
+          const startDate = dateRange.startDate;
+          const endDate = dateRange.endDate;
+          const currentDate = new Date(startDate);
+          while (currentDate <= endDate) {
+            disabled.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+        });
+    
+        console.log("Disabled dates:", disabled);
+    
+        setDisabledDates(disabled);
+      } catch (error) {
+        console.error('Error fetching unavailable periods:', error);
+      }
+    };
+
+    fetchUnavailablePeriods();
+  }, []);
+
+  const filterDateFunction = (date, disabledDates) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    return !disabledDates.some(disabledDate => {
+      const disabledYear = disabledDate.getFullYear();
+      const disabledMonth = disabledDate.getMonth();
+      const disabledDay = disabledDate.getDate();
+      return year === disabledYear && month === disabledMonth && day === disabledDay;
+    });
   };
 
   useEffect(() => {
@@ -116,6 +169,7 @@ function CarDisplay() {
                       minDate={new Date()}
                       placeholderText="Select start date"
                       className="date-input"
+                      filterDate={date => filterDateFunction(date, disabledDates)}
                     />
                   </div>
                   <div className="date-picker">
@@ -126,6 +180,8 @@ function CarDisplay() {
                       minDate={startDate}
                       placeholderText="Select end date"
                       className="date-input"
+                      filterDate={date => filterDateFunction(date, disabledDates)}
+                      disabled={!startDate}
                     />
                   </div>
                 </div>
