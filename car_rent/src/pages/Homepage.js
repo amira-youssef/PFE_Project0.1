@@ -28,10 +28,7 @@ const Homepage = () => {
     <><Hero />
     <div className={classes.root}>
       {/* Search Bar Section */}
-      <section className={classes.section}>
-        <BookCar />
-      </section>
-
+      
       {/* Featured Cars Section */}
       <section className={classes.section}>
         <Typography variant="h4" gutterBottom>

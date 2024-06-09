@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import AddAgencyModal from './AddAgencyModal';
-import '../dashboardC/CarsTab/style/components.css';
 
 function FilterableAgencies() {
   const [agencies, setAgencies] = useState([]);
@@ -45,20 +44,65 @@ function FilterableAgencies() {
       <button className="add-button" onClick={handleOpenAddAgencyModal}>
         <FontAwesomeIcon icon={faPlus} /> Add Agency
       </button>
-      <div className="cards-list">
-        {agencies.map((agency) => (
-          <div key={agency._id} className="card">
-            <h3>{agency.name}</h3>
-            <p>Address: {agency.address}</p>
-            <p>City: {agency.city}</p>
-            <p>State: {agency.state}</p>
-            <button onClick={() => handleDeleteAgency(agency._id)} className="delete-button">
-              <FontAwesomeIcon icon={faTrashAlt} /> Delete
-            </button>
-          </div>
-        ))}
-      </div>
+      <table className="agency-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {agencies.map((agency) => (
+            <tr key={agency._id}>
+              <td>{agency.name}</td>
+              <td>{agency.address}</td>
+              <td>{agency.city}</td>
+              <td>{agency.state}</td>
+              <td>
+                <button onClick={() => handleDeleteAgency(agency._id)} className="delete-button">
+                  <FontAwesomeIcon icon={faTrashAlt} /> Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <AddAgencyModal show={isAddAgencyModalOpen} onClose={handleCloseAddAgencyModal} />
+      <style jsx>{`
+        .container {
+          padding: 20px;
+        }
+        .add-button {
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          margin: 10px 0;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        .agency-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .agency-table th, .agency-table td {
+          padding: 10px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+        .delete-button {
+          background-color: #dc3545;
+          color: #fff;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+      `}</style>
     </div>
   );
 }

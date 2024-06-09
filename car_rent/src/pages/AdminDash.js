@@ -14,8 +14,6 @@ import FilterableAgencies from '../components/dashboardA/FilterableAgencies';
 import FilterableTestimonials from '../components/dashboardA/FilterableTestimonials';
 import AddUserModal from '../components/dashboardA/AddUserModal';
 import AddAgencyModal from '../components/dashboardA/AddAgencyModal';
-import '../components/dashboardC/CarsTab/style/components.css';
-
 
 const defaultTheme = createTheme();
 
@@ -143,6 +141,22 @@ export default function AdminDash() {
       </Box>
       <AddUserModal show={isAddUserModalOpen} onClose={handleCloseAddUserModal} />
       <AddAgencyModal show={isAddAgencyModalOpen} onClose={handleCloseAddAgencyModal} />
+      <style jsx>{`
+        .sidebar-button {
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          margin: 10px 0;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+          width: 100%;
+        }
+        .sidebar-button:hover {
+          background-color: #0056b3;
+        }
+      `}</style>
     </ThemeProvider>
   );
 }

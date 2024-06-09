@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@mui/material";
 import Chart from '../components/dashboardC/Chart';
 import Deposits from '../components/dashboardC/Deposits';
@@ -17,7 +17,6 @@ import Info from '../components/dashboardC/Info';
 import Stats from '../components/dashboardC/Stats';
 import FilterableCards from '../components/dashboardC/CarsTab/FilterableCards';
 import AddCarModal from '../components/dashboardC/CarsTab/AddCarModal';
-//import '../components/dashboardC/CarsTab/style/main.css';
 import FilterableMaintenances from '../components/dashboardC/MaintTab/FilterableMaintenances';
 
 const defaultTheme = createTheme();
@@ -38,6 +37,14 @@ function Copyright(props) {
 export default function ManagerDash() {
   const [value, setValue] = React.useState('one');
   const [isAddCarModalOpen, setIsAddCarModalOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
+  React.useEffect(() => {
+    if (!userData?.agencyId) {
+      navigate('/agencyForm');
+    }
+  }, [userData, navigate]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

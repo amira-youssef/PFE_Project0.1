@@ -1,43 +1,36 @@
-.hero-pages {
-    width: 100%;
-    height: 30rem;
-    background-image: url("/src/assets/hero/heroes-bg.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+
+
+  .hero-pages {
     position: relative;
+    height: 400px; /* Adjust the height as needed */
+    background: url("/src/assets/hero/heroes-bg.png") no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+   
+    color: white;
   }
+  
   .hero-pages__overlay {
-    width: 100%;
-    height: 100%;
     position: absolute;
     top: 0;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.92);
-  }
-  .hero-pages__text {
-    display: flex;
-    flex-direction: column;
-    z-index: 3;
-    position: relative;
+    left: 0;
     width: 100%;
-    height: 41rem;
-    justify-content: center;
-    color: #010103;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay color with transparency */
+    z-index: 1;
   }
+  
+  .hero-pages__text {
+    position: relative;
+    z-index: 2;
+  }
+  
   .hero-pages__text h3 {
-    font-size: 3.6rem;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
   }
+  
   .hero-pages__text p {
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 1.2rem;
   }
-  .hero-pages__text p a {
-    color: #010103;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  .hero-pages__text p a:hover {
-    color: #ff4d30;
-  }
+  

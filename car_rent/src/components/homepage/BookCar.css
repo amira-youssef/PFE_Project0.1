@@ -1,356 +1,58 @@
 .book-section {
-  position: sticky;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9); /* White background with transparency */
   padding: 1rem;
+  border-radius: 10px;
+  z-index: 3;
 }
 
 .book-content {
-  margin: auto;
-  margin-bottom: 10rem;
-  max-width: 1200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .book-content__box {
-  background-image: url("../../assets/book-car/book-bg.png");
-  background-color: #fff;
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 5px;
-  box-shadow: 0 10px 20px 0 rgba(0,0,0,.1);
-  color: #010103;
   display: flex;
-  flex-direction: column;
-  padding: 4rem 2rem;
-  position: relative;
-  width: 100%;
-  z-index: 4;
+  flex-direction: row;
+  align-items: center;
 }
 
-.book-content__box h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2.7rem;
-}
-
-.book-content__box .box-form {
-  display: grid;
+.box-form {
+  display: flex;
   gap: 1rem;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto auto;
+  align-items: center;
 }
 
-.book-content__box .box-form b {
-  color: #ff5330;
-}
-
-.book-content__box .box-form__car-type,
-.book-content__box .box-form__car-time {
+.box-form__field {
   display: flex;
   flex-direction: column;
+  margin: 0.5rem;
 }
 
-.book-content__box .box-form__car-type label,
-.book-content__box .box-form__car-time label {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.2rem;
+.box-form__field label {
+  margin-bottom: 0.2rem;
 }
 
-.book-content__box .box-form__car-type select,
-.book-content__box .box-form__car-time input {
-  font-size: 1.5rem;
-  color: #ababab;
+.box-form__field select,
+.box-form__field input {
+  padding: 0.5rem;
   border: 1px solid #ccd7e6;
   border-radius: 3px;
-  padding: 1.2rem 1.3rem;
-  outline: none;
 }
 
-.book-content__box button {
-  padding: 1.3rem 1.3rem;
-  height: fit-content;
-  align-self: flex-end;
-  border: none;
-  font-size: 1.8rem;
-  font-weight: 500;
-  color: white;
+.box-form button {
+  padding: 0.5rem 1rem;
   background-color: #ff5330;
-  box-shadow: 0 10px 15px rgb(255 83 48 / 35%);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.book-content__box button:hover {
-  box-shadow: 0 10px 15px rgb(255 83 48 / 55%);
-}
-
-.error-message,
-.booking-done {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  padding: 1rem 1.4rem;
-  margin-bottom: 1.8rem;
-  margin-top: -1rem;
-  border: 1px solid transparent;
-  border-radius: 0.8rem;
-  font-size: 1.5rem;
-  font-weight: 500;
-  display: none;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.booking-done {
-  color: #2a6817;
-  background-color: #c3fabe;
-  border-color: #f5c6cb;
-}
-
-.error-message i,
-.booking-done i {
-  cursor: pointer;
-}
-
-.input-time {
-  text-align: center;
-  width: 8rem;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.info-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.info-form__checkbox {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  font-size: 1.5rem;
-  color: #565454;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
-}
-
-.info-form__checkbox input {
-  width: 1.6rem;
-  height: 1.6rem;
-}
-
-.info-form__1col {
-  grid-template-columns: 1fr !important;
-}
-
-.info-form__2col,
-.info-form__1col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  padding: 1rem 0;
-}
-
-@media (max-width: 1024px) {
-  .book-content__box {
-    padding: 3rem 2rem;
-  }
-
-  .book-content__box .box-form {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .book-content__box button {
-    font-size: 1.6rem;
-    padding: 1rem 1.2rem;
-  }
-
-  .info-form__2col,
-  .info-form__1col {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .reserve-button {
-    padding: 2rem;
-  }
-
-  .reserve-button button {
-    font-size: 1.8rem;
-    padding: 1rem 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .book-content__box {
-    padding: 2.5rem 1.5rem;
-  }
-
-  .book-content__box h2 {
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
-  }
-
-  .book-content__box .box-form {
-    grid-template-columns: 1fr;
-  }
-
-  .book-content__box button {
-    font-size: 1.4rem;
-    padding: 0.8rem 1rem;
-  }
-
-  .info-form__2col,
-  .info-form__1col {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .reserve-button {
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .reserve-button button {
-    font-size: 1.6rem;
-    padding: 1rem 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .book-content__box {
-    padding: 2rem 1rem;
-  }
-
-  .book-content__box h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .book-content__box .box-form {
-    grid-template-columns: 1fr;
-  }
-
-  .book-content__box button {
-    font-size: 1.2rem;
-    padding: 0.6rem 0.8rem;
-  }
-
-  .info-form__2col,
-  .info-form__1col {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .reserve-button {
-    padding: 1.5rem;
-    text-align: center;
-  }
-
-  .reserve-button button {
-    font-size: 1.4rem;
-    padding: 0.8rem 1.2rem;
-  }
-
-  .dates-div {
-    gap: 2rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .book-content__box {
-    padding: 1.5rem 0.5rem;
-  }
-
-  .book-content__box h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-  }
-
-  .book-content__box .box-form {
-    grid-template-columns: 1fr;
-  }
-
-  .book-content__box button {
-    font-size: 1rem;
-    padding: 0.5rem 0.6rem;
-  }
-
-  .info-form__2col,
-  .info-form__1col {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-
-  .reserve-button {
-    padding: 1rem;
-    text-align: center;
-  }
-
-  .reserve-button button {
-    font-size: 1.2rem;
-    padding: 0.6rem 1rem;
-  }
-
-  .dates-div {
-    gap: 1.5rem;
-  }
-}
-
-.info-form__2col span,
-.info-form__1col span {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.info-form__2col label,
-.info-form__1col label {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #777777;
-}
-
-.info-form__2col label b,
-.info-form__1col label b {
-  color: #ff5330;
-}
-
-.info-form__2col input,
-.info-form__1col input {
-  padding: 14px 15px;
-  background-color: #dbdbdb;
-  color: #555;
-  font-size: 1.5rem;
-  font-weight: 500;
-  outline: none;
-  border: none;
-}
-
-.reserve-button {
-  background-color: #dbdbdb;
-  margin: 0 -3rem;
-  padding: 3rem;
-  text-align: right;
-}
-
-.reserve-button button {
-  font-size: 2rem;
   color: white;
-  font-weight: 700;
-  background-color: #ff5330;
-  border: 1px solid yellow;
-  padding: 1.2rem 2rem;
+  border: none;
+  border-radius: 3px;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
-.reserve-button button:hover {
-  background-color: #fe3516;
-}
-
-.dates-div {
-  display: flex;
-  flex-direction: column;
-  gap: 3.2rem;
+.box-form button:hover {
+  background-color: #e04e2a;
 }

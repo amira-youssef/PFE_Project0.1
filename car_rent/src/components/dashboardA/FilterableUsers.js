@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserEdit, faUserPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUserEdit, faUserPlus, faTrashAlt, faCheck } from '@fortawesome/free-solid-svg-icons';
 import AddUserModal from './AddUserModal';
-import '../dashboardC/CarsTab/style/components.css';
 
 function FilterableUsers() {
   const [users, setUsers] = useState([]);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [managers, setManagers] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -16,7 +16,9 @@ function FilterableUsers() {
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/users/allUsers');
-      setUsers(response.data);
+      const allUsers = response.data;
+      setUsers(allUsers.filter(user => user.role === 'user'));
+      setManagers(allUsers.filter(user => user.role === 'manager'));
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -40,22 +42,121 @@ function FilterableUsers() {
     }
   };
 
+  const handleActivateManager = async (userId) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/users/toggleActive/${userId}`, { isActive: true });
+      fetchUsers();
+    } catch (error) {
+      console.error('Error activating manager:', error);
+    }
+  };
+
   return (
-    <div className="container">
-      <button className="add-button" onClick={handleOpenAddUserModal}>
+    <div style={{ padding: '20px' }}>
+      <button
+        onClick={handleOpenAddUserModal}
+        style={{
+          backgroundColor: '#007bff',
+          color: '#fff',
+          padding: '10px 20px',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          marginBottom: '20px',
+        }}
+      >
         <FontAwesomeIcon icon={faUserPlus} /> Add User
       </button>
-      <div className="cards-list">
-        {users.map((user) => (
-          <div key={user._id} className="card">
-            <h3>{user.name}</h3>
-            <p>Email: {user.email}</p>
-            <p>Role: {user.role}</p>
-            <button onClick={() => handleDeleteUser(user._id)} className="delete-button">
-              <FontAwesomeIcon icon={faTrashAlt} /> Delete
-            </button>
-          </div>
-        ))}
+      <div style={{ display: 'flex', gap: '20px' }}>
+        <div style={{ flex: 1 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+            <thead style={{ backgroundColor: '#f5f5f5' }}>
+              <tr>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Users</th>
+              </tr>
+              <tr>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Name</th>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user._id}>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{user.name}</td>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{user.email}</td>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
+                    <button
+                      onClick={() => handleDeleteUser(user._id)}
+                      style={{
+                        backgroundColor: '#dc3545',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrashAlt} /> Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ flex: 1 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+            <thead style={{ backgroundColor: '#f5f5f5' }}>
+              <tr>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Managers</th>
+              </tr>
+              <tr>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Name</th>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Email</th>
+                <th style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {managers.map((manager) => (
+                <tr key={manager._id}>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{manager.name}</td>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>{manager.email}</td>
+                  <td style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
+                    {!manager.isActive && (
+                      <button
+                        onClick={() => handleActivateManager(manager._id)}
+                        style={{
+                          backgroundColor: '#28a745',
+                          color: '#fff',
+                          border: 'none',
+                          padding: '5px 10px',
+                          borderRadius: '5px',
+                          cursor: 'pointer',
+                          marginRight: '10px',
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faCheck} /> Activate
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDeleteUser(manager._id)}
+                      style={{
+                        backgroundColor: '#dc3545',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '5px 10px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrashAlt} /> Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <AddUserModal show={isAddUserModalOpen} onClose={handleCloseAddUserModal} />
     </div>

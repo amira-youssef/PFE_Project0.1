@@ -29,11 +29,18 @@ const LoginPage = () => {
       localStorage.setItem('isLoggedIn', true);
       localStorage.setItem('userData', JSON.stringify(response.data.user || response.data.token));
 
-      const role = response.data.user.role;
+      const userData = response.data.user;
+      const role = userData.role;
+      const agencyId = userData.agencyId;
+
       if (role === 'admin') {
         navigate('/admin');
       } else if (role === 'manager') {
-        navigate('/manager');
+        if (agencyId) {
+          navigate('/managerDashboard');
+        } else {
+          navigate('/agencyForm');
+        }
       } else {
         navigate('/home');
       }
