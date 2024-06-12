@@ -1,84 +1,107 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, CardContent, Typography, Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@mui/material';
+import { Card, ListGroup, Image, Container, Row, Col, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
   const [rents, setRents] = useState([]);
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      setUserData(parsedUserData);
+    } else {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchRents = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/rents/getAllByUser/${userData._id}`);
-        setRents(response.data);
-      } catch (error) {
-        console.error('Error fetching rents:', error);
+      if (userData && userData._id) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/rents/getAllByUser/${userData._id}`);
+          setRents(response.data);
+        } catch (error) {
+          console.error('Error fetching rents:', error);
+        }
       }
     };
 
     fetchRents();
-  }, [userData._id]);
+  }, [userData]);
+
+  const handleLogout = () => {
+    // Clear all items from local storage
+    localStorage.clear();
+    // Set isLoggedIn to false
+    localStorage.setItem('isLoggedIn', false);
+    // Redirect to login page and reload the window
+    navigate("/login");
+    window.location.reload();
+  };
+
+  if (!userData) {
+    return null; // Optionally, show a loading spinner or message
+  }
 
   return (
-    <Grid container spacing={2} justifyContent="center">
-      <Grid item xs={12} md={3}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              User Information
-            </Typography>
-            <Typography variant="body1"><strong>Name:</strong> {userData.name}</Typography>
-            <Typography variant="body1"><strong>Email:</strong> {userData.email}</Typography>
-            <Typography variant="body1"><strong>Phone Number:</strong> {userData.phoneNumber}</Typography>
-            <Typography variant="body1"><strong>Address:</strong> {userData.address}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
+    <Container>
+      <Row className="justify-content-center">
+        <Col xs={12} md={4}>
+          <Card className="text-center mb-4">
+            <Card.Body>
+              <Image 
+                src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" 
+                roundedCircle 
+                style={{ width: '100px', height: '100px', marginBottom: '1rem' }} 
+              />
+              <Card.Title>User Information</Card.Title>
+              <Card.Text><strong>Name:</strong> {userData.nom} {userData.prenom}</Card.Text>
+              <Card.Text><strong>Email:</strong> {userData.email}</Card.Text>
+              <Card.Text><strong>Address:</strong> {userData.address}</Card.Text>
+              <Button variant="danger" onClick={handleLogout} className="mt-3">
+                Logout
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
 
-      <Grid item xs={12} md={6}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              Rents
-            </Typography>
-            <List>
-              {rents.length > 0 ? (
-                rents.map((rent) => {
-                  const { maker, model, mainImage } = rent;
-                  return (
-                    <ListItem key={rent._id} alignItems="flex-start">
-                      <ListItemAvatar>
-                        <Avatar src={`http://localhost:5000/${mainImage}`} alt={`${maker} ${model}`} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={`Vehicle: ${maker} ${model}`}
-                        secondary={
-                          <>
-                            <Typography component="span" variant="body2" color="textPrimary">
-                              Pickup: {new Date(rent.pickupDateTime).toLocaleString()}
-                            </Typography>
-                            <br />
-                            <Typography component="span" variant="body2" color="textPrimary">
-                              Return: {new Date(rent.returnDateTime).toLocaleString()}
-                            </Typography>
-                            <br />
-                            <Typography component="span" variant="body2" color="textPrimary">
-                              Status: {rent.status}
-                            </Typography>
-                          </>
-                        }
-                      />
-                    </ListItem>
-                  );
-                })
-              ) : (
-                <Typography variant="body2">No rents found.</Typography>
-              )}
-            </List>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
+        <Col xs={12} md={8}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Rents</Card.Title>
+              <ListGroup variant="flush">
+                {rents.length > 0 ? (
+                  rents.map((rent) => {
+                    const { maker, model, mainImage } = rent;
+                    return (
+                      <ListGroup.Item key={rent._id}>
+                        <Row className="align-items-center">
+                          <Col xs={3}>
+                            <Image src={`http://localhost:5000/${mainImage}`} rounded fluid />
+                          </Col>
+                          <Col>
+                            <strong>Vehicle:</strong> {maker} {model}<br />
+                            <strong>Pickup:</strong> {new Date(rent.pickupDateTime).toLocaleDateString()}<br />
+                            <strong>Return:</strong> {new Date(rent.returnDateTime).toLocaleDateString()}<br />
+                            <strong>Status:</strong> {rent.status}
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                    );
+                  })
+                ) : (
+                  <Card.Text>No rents found.</Card.Text>
+                )}
+              </ListGroup>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

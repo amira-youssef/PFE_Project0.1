@@ -10,7 +10,6 @@ import "../../style/nav.css"; // Import CSS for styling
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-  const [showDropdown, setShowDropdown] = useState(false); // State for dropdown menu
   const navigate = useNavigate(); // Hook for navigation
 
   // Retrieve user data from localStorage to check login status
@@ -18,7 +17,6 @@ const Navbar = () => {
     const userData = localStorage.getItem('userData');
     if (userData) {
       setIsLoggedIn(true);
-      
     } else {
       setIsLoggedIn(false);
     }
@@ -62,14 +60,14 @@ const Navbar = () => {
             />
             <MobileLinksDrawer onHandleOpen={handleOpen} onOpen={open} />
             <div className="navbar-brand">
-        <Link to="/">
-          <img 
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaQ7HJNRI6T7SljDS6RptFDpXBPY3IOZwQyQ&s" 
-            alt="Brand Logo" 
-            className="navbar-logo"
-          />
-        </Link>
-      </div>
+              <Link to="/">
+                <img 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaQ7HJNRI6T7SljDS6RptFDpXBPY3IOZwQyQ&s" 
+                  alt="Brand Logo" 
+                  className="navbar-logo"
+                />
+              </Link>
+            </div>
           </div>
           <div className="links hide-in-mobile">
             <ul>
@@ -83,10 +81,10 @@ const Navbar = () => {
                 <button onClick={() => handleNavClick("/agencies")}>Agencies</button>
               </li>
               <li>
-                <button onClick={() => handleNavClick("/agencies")}>Contact Us</button>
+                <button onClick={() => handleNavClick("/contact")}>Contact Us</button>
               </li>
               <li>
-                <button onClick={() => handleNavClick("/agencies")}>How to ?</button>
+                <button onClick={() => handleNavClick("/how-to")}>How to ?</button>
               </li>
               {/* Add more navigation links if needed */}
             </ul>
@@ -94,14 +92,12 @@ const Navbar = () => {
         </section>
         <div className="right">
           {isLoggedIn ? (
-            <div className="avatar-container" onClick={() => setShowDropdown(!showDropdown)}>
-              <img src={avatar} alt="img-avatar" className="avatar" />
-              {showDropdown && (
-                <div className="dropdown-menu">
-                  <button onClick={() => handleNavClick("/profile")}>Profile</button>
-                  <button onClick={handleLogout}>Logout</button>
-                </div>
-              )}
+            <div className="avatar-container">
+              <Link to="/profile">
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" 
+                     alt="img-avatar" 
+                     className="avatar" />
+              </Link>
             </div>
           ) : (
             <Button variant="contained" color="primary" style={{'backgroundColor': '#ff4d30'}} onClick={handleLogin}>
@@ -114,27 +110,6 @@ const Navbar = () => {
         .avatar-container {
           position: relative;
           cursor: pointer;
-        }
-        .dropdown-menu {
-          position: absolute;
-          right: 0;
-          top: 100%;
-          background-color: white;
-          border: 1px solid #ddd;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-          z-index: 1000;
-        }
-        .dropdown-menu button {
-          width: 100%;
-          padding: 10px;
-          background: none;
-          border: gray;
-          text-align: left;
-          cursor: pointer;
-          color: gray;
-        }
-        .dropdown-menu button:hover {
-          background-color: #f1f1f1;
         }
       `}</style>
     </header>

@@ -10,10 +10,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import Title from './Title';
 import axios from 'axios';
+import { Box, Typography } from '@mui/material';
 
 // Generate Rent Data
-function createData(id, date, renterName, pickupLocation, paymentMethod, amount, status) {
-  return { id, date, renterName, pickupLocation, paymentMethod, amount, status };
+function createData(id, startDate, endDate, renterName, location, paymentMethod, amount, status) {
+  return { id, startDate, endDate, renterName, location, paymentMethod, amount, status };
 }
 
 export default function Orders() {
@@ -35,6 +36,7 @@ export default function Orders() {
           createData(
             rent?._id,
             new Date(rent?.pickupDateTime).toLocaleDateString(),
+            new Date(rent?.returnDateTime).toLocaleDateString(),
             rent.driverInformation.fullName,
             rent.pickupLocation,
             rent.paymentMethod,
@@ -69,12 +71,12 @@ export default function Orders() {
 
   const handleDiscardClick = async (id) => {
     try {
-      const response = await axios.patch(`http://localhost:5000/api/rents/updateStatus/${id}`, { status: 'discarded' });
+      const response = await axios.patch(`http://localhost:5000/api/rents/updateStatus/${id}`, { status: 'rejected' });
       if (response.status === 200) {
         // Update the state to reflect the new status
         setRows((prevRows) =>
           prevRows.map((row) =>
-            row.id === id ? { ...row, status: 'discarded' } : row
+            row.id === id ? { ...row, status: 'rejected' } : row
           )
         );
       }
@@ -83,19 +85,27 @@ export default function Orders() {
     }
   };
 
+  const statusColors = {
+    accepted: '#c8e6c9', // Pastel Green
+    pending: '#fff9c4', // Pastel Yellow
+    rejected: '#ffcdd2', // Pastel Red
+    suspended: '#ffcdd2' // Pastel Red (same as discarded)
+  };
+
   return (
     <React.Fragment>
       <Title>Rent Requests</Title>
       <Table size="small" sx={{ width: '100%', borderCollapse: 'collapse' }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{ border: '1px solid gray' }}>Date</TableCell>
-            <TableCell sx={{ border: '1px solid gray' }}>Name</TableCell>
-            <TableCell sx={{ border: '1px solid gray' }}>Ship To</TableCell>
-            <TableCell sx={{ border: '1px solid gray' }}>Payment Method</TableCell>
-            <TableCell sx={{ border: '1px solid gray' }} align="right">Sale Amount</TableCell>
-            <TableCell sx={{ border: '1px solid gray' }}>Status</TableCell>
-            <TableCell sx={{ border: '1px solid gray' }} align="right">Actions</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }}>Start Date</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }}>End Date</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }}>Name</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }}>Location</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }}>Payment Method</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }} align="right">Sale Amount</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }}>Status</TableCell>
+            <TableCell sx={{ border: '1px solid lightGray' }} align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -103,21 +113,32 @@ export default function Orders() {
             <TableRow
               key={row.id}
               sx={{
-                backgroundColor:
-                  row.status === 'accepted' ? 'green' :
-                  row.status === 'pending' ? 'yellow' :
-                  row.status === 'discarded'||'suspended'? 'red' : 'white',
-                color: row.status === 'pending' ? 'black' : 'white',
+                borderLeft: `10px solid ${statusColors[row.status]}`,
                 '&:last-child td, &:last-child th': { border: 0 },
               }}
             >
-              <TableCell sx={{ border: '1px solid gray' }}>{row.date}</TableCell>
-              <TableCell sx={{ border: '1px solid gray' }}>{row.renterName}</TableCell>
-              <TableCell sx={{ border: '1px solid gray' }}>{row.pickupLocation}</TableCell>
-              <TableCell sx={{ border: '1px solid gray' }}>{row.paymentMethod}</TableCell>
-              <TableCell sx={{ border: '1px solid gray' }} align="right">{`${row.amount.toFixed(2)} DT`}</TableCell>
-              <TableCell sx={{ border: '1px solid gray' }}>{row.status}</TableCell> {/* Display the status */}
-              <TableCell sx={{ border: '1px solid gray' }} align="right">
+              <TableCell sx={{ border: '1px solid lightGray' }}>{row.startDate}</TableCell>
+              <TableCell sx={{ border: '1px solid lightGray' }}>{row.endDate}</TableCell>
+              <TableCell sx={{ border: '1px solid lightGray' }}>{row.renterName}</TableCell>
+              <TableCell sx={{ border: '1px solid lightGray' }}>{row.location}</TableCell>
+              <TableCell sx={{ border: '1px solid lightGray' }}>{row.paymentMethod}</TableCell>
+              <TableCell sx={{ border: '1px solid lightGray' }} align="right">{`${row.amount.toFixed(2)} DT`}</TableCell>
+              <TableCell sx={{ border: '1px solid lightGray' }}>
+                <Box
+                  sx={{
+                    display: 'inline-block',
+                    padding: '2px 8px',
+                    borderRadius: '16px',
+                    backgroundColor: statusColors[row.status],
+                    color: '#000',
+                    fontWeight: 'bold',
+                    textTransform: 'capitalize'
+                  }}
+                >
+                  {row.status}
+                </Box>
+              </TableCell>
+              <TableCell sx={{ border: '1px gray' }} align="right">
                 <IconButton
                   onClick={() => handleAcceptClick(row.id)}
                   aria-label="accept"

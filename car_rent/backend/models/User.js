@@ -41,14 +41,14 @@ const userSchema= new mongoose.Schema({
     buisnessEmail : {
         type : String , 
     },
-    agencyId: { // New field to store agency association
+    agencyId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Agency' // Reference the Agency model for data integrity
+        ref: 'Agency' 
     }, 
     address: {
         type: String , 
     },
-
+   
 }); 
 
 const User = mongoose.model('User', userSchema);

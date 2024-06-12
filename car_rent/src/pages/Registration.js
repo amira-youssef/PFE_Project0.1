@@ -15,7 +15,7 @@ export default function Registration() {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 600, margin: '0 auto', mt: 4, p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: '#fff' }}>
+    <Box sx={{ width: '100%', maxWidth: 600, margin: '0 auto', mt: 4, p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: 'linear-gradient(135deg, #ff2000, #f2d8f4)' }}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -27,7 +27,7 @@ export default function Registration() {
         <Tab value="one" label="Register as User" />
         <Tab value="two" label="Register as Manager" />
       </Tabs>
-      {/* Render RegisterUser only when value is 'one' */}
+
       {value === 'one' && (
         <Box p={3}>
           <RegisterUser />

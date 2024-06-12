@@ -11,8 +11,8 @@ router.get('/allUsers' , usersController.getUsers) ;
 router.get('/getUserById/:id' , usersController.getUserById) ;
 router.get('/allManagers' , usersController.getManagers) ;
 router.delete('/:id/deleteUser' , usersController.deleteUser) ;
-router.put('/:id/updateU' , usersController.updateUser) ;
-router.put('/:id/updateM' , usersController.updateManager) ;
+router.put('/updateU/:id' , usersController.updateUser) ;
+router.put('/updateM/:id' , usersController.updateManager) ;
 router.patch('/toggleActive/:userId', usersController.toggleActive);
 
 module.exports = router ; 

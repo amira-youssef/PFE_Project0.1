@@ -4,7 +4,6 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faCity, faPhone, faEnvelope, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 import '../components/CarsList.css';  // Reuse the same CSS for styling
 import './agencyModal.css';  // New CSS for modal styling
 import HeroPages from '../components/HeroPages';
@@ -34,7 +33,14 @@ const AgenciesList = () => {
   const fetchVehiclesByAgencyId = async (agencyId) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/vehicles/getByAgId/${agencyId}`);
-      setVehicles(response.data);
+      const vehiclesWithUpdatedImagePaths = response.data.map(vehicle => ({
+        ...vehicle,
+        mainImage: `http://localhost:5000/${vehicle.mainImage}`,
+        image1: `http://localhost:5000/${vehicle.image1}`,
+        image2: `http://localhost:5000/${vehicle.image2}`,
+        image3: `http://localhost:5000/${vehicle.image3}`,
+      }));
+      setVehicles(vehiclesWithUpdatedImagePaths);
     } catch (error) {
       console.error('Error fetching vehicles:', error);
     }
@@ -67,15 +73,15 @@ const AgenciesList = () => {
                     </div>
                     <div className="models-div__box__details">
                       <div className="agency-detail">
-                      <FontAwesomeIcon icon={faCity} className="icon"/>
+                        <FontAwesomeIcon icon={faCity} className="icon" />
                         <span>{agency.address}</span>
                       </div>
                       <div className="agency-detail">
-                        <FontAwesomeIcon icon={faMapMarkerAlt} className="icon"/>
+                        <FontAwesomeIcon icon={faMapMarkerAlt} className="icon" />
                         <span>{agency.city}, {agency.state}</span>
                       </div>
                       <div className="agency-detail">
-                        <FontAwesomeIcon icon={faPhone} className="icon"/>
+                        <FontAwesomeIcon icon={faPhone} className="icon" />
                         <span>{agency.phoneNumber}</span>
                       </div>
                       <div className="agency-detail">
@@ -121,7 +127,7 @@ const AgenciesList = () => {
             {vehicles.length > 0 ? (
               vehicles.map((vehicle) => (
                 <div key={vehicle._id} className="vehicle-detail">
-                  <img src={vehicle.mainImage} alt={`${vehicle.maker} ${vehicle.model}`} className="vehicle-image"/>
+                  <img src={vehicle.mainImage} alt={`${vehicle.maker} ${vehicle.model}`} className="vehicle-image" />
                   <div className="vehicle-info">
                     <p><strong>{vehicle.maker} {vehicle.model}</strong></p>
                     <p><strong>Year:</strong> {vehicle.year}</p>

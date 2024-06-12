@@ -48,13 +48,12 @@ function Hero() {
             </p>
             <div className="hero-content__text__btns">
               <Link
-                onClick={bookBtn}
                 className="hero-content__text__btns__book-ride"
-                to="/"
+                to="/cars"
               >
                 Book Ride &nbsp; <i className="fa-solid fa-circle-check"></i>
               </Link>
-              <Link className="hero-content__text__btns__learn-more" to="/">
+              <Link className="hero-content__text__btns__learn-more" to="/howTo">
                 Learn More &nbsp; <i className="fa-solid fa-angle-right"></i>
               </Link>
             </div>

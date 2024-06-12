@@ -38,9 +38,9 @@ const LoginPage = () => {
           toggleModal();
           return;
         } else if (agencyId) {
-          navigate('/managerDashboard');
+          navigate('/manager');
         } else {
-          navigate('/agencyForm');
+          navigate('/createAgency');
         }
       } else {
         navigate('/home');
@@ -62,36 +62,38 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <h1>Login</h1>
-      <Form onSubmit={handleSubmit}>
-        <FormGroup className="form-group">
-          <Label for="email">Email</Label>
-          <Input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </FormGroup>
-        <FormGroup className="form-group">
-          <Label for="password">Password</Label>
-          <Input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </FormGroup>
-        <Button type="submit" className="login-button">
-          Login
-        </Button>
-      </Form>
-      <div className="sign-in-link">
-        <p>Don't have an account? <Link to="/register">Sign up</Link></p>
+      <div className="login-form-container">
+        <h1>Login</h1>
+        <Form onSubmit={handleSubmit}>
+          <FormGroup className="form-group">
+            <Label for="email">Email</Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label for="password">Password</Label>
+            <Input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </FormGroup>
+          <Button type="submit" className="login-button">
+            Login
+          </Button>
+        </Form>
+        <div className="sign-in-link">
+          <p>Don't have an account? <Link to="/register">Sign up</Link></p>
+        </div>
       </div>
 
       <Modal isOpen={modal} toggle={toggleModal} centered className="custom-modal">
@@ -106,6 +108,63 @@ const LoginPage = () => {
 
       <style>
         {`
+          .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff2000, #f2d8f4);
+            height: 100vh;
+            width : 200vh ;
+            padding: 20px;
+          }
+
+          .login-form-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+          }
+
+          .login-form-container h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+          }
+
+          .form-group label {
+            font-weight: bold;
+          }
+
+          .login-button {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+          }
+
+          .login-button:hover {
+            background-color: #0056b3;
+          }
+
+          .sign-in-link p {
+            margin-top: 20px;
+            font-size: 1rem;
+          }
+
+          .sign-in-link a {
+            color: #007bff;
+            text-decoration: none;
+          }
+
+          .sign-in-link a:hover {
+            text-decoration: underline;
+          }
+
           .custom-modal .modal-content {
             background-color: #f5f5f5;
             border-radius: 10px;
@@ -147,53 +206,6 @@ const LoginPage = () => {
           .custom-modal .btn-secondary:hover {
             background-color: #0056b3;
             border-color: #004085;
-          }
-
-          .login-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: #f7f7f7;
-            padding: 20px;
-          }
-
-          .login-container h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-          }
-
-          .form-group label {
-            font-weight: bold;
-          }
-
-          .login-button {
-            background-color: #007bff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-          }
-
-          .login-button:hover {
-            background-color: #0056b3;
-          }
-
-          .sign-in-link p {
-            margin-top: 20px;
-            font-size: 1rem;
-          }
-
-          .sign-in-link a {
-            color: #007bff;
-            text-decoration: none;
-          }
-
-          .sign-in-link a:hover {
-            text-decoration: underline;
           }
         `}
       </style>

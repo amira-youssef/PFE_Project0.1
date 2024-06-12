@@ -27,6 +27,17 @@ const AgencySchema = new mongoose.Schema({
   email: {
     type: String
   },
+  rating: { 
+    type: Number, 
+    default: 0 
+  },
+  numRatings: { 
+    type: Number, 
+    default: 0 
+  },
+  logo: {
+    type: String
+  }
  
 });
 

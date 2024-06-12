@@ -1,10 +1,11 @@
-// MaintenanceModal.js
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { TextField, Button, Grid, MenuItem } from '@mui/material';
 import axios from 'axios';
 import './MaintenanceModal.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function AddMaintModal({ show, onClose, vehicleId }) {
   const [form, setForm] = useState({
@@ -16,6 +17,10 @@ function AddMaintModal({ show, onClose, vehicleId }) {
     price: ''
   });
 
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [disabledDates, setDisabledDates] = useState([]);
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData && userData._id) {
@@ -26,13 +31,77 @@ function AddMaintModal({ show, onClose, vehicleId }) {
     }
   }, []);
 
-  if (!show) return null;
+  useEffect(() => {
+    const fetchUnavailablePeriods = async () => {
+      try {
+        const rentsResponse = await axios.get(`http://localhost:5000/api/rents/getRentDates/${vehicleId}`);
+        const maintenanceResponse = await axios.get(`http://localhost:5000/api/maint/getMaintDatesByVehicleId/${vehicleId}`);
+    
+        const carReservationDates = rentsResponse.data.map(item => ({
+          startDate: new Date(item.startDate),
+          endDate: new Date(item.endDate)
+        }));
+    
+        const maintenanceDates = maintenanceResponse.data.map(item => ({
+          startDate: new Date(item.startDate),
+          endDate: new Date(item.endDate)
+        }));
+    
+        const allDates = [...carReservationDates, ...maintenanceDates];
+    
+        const disabled = [];
+        allDates.forEach(dateRange => {
+          const startDate = dateRange.startDate;
+          const endDate = dateRange.endDate;
+          const currentDate = new Date(startDate);
+          while (currentDate <= endDate) {
+            disabled.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+          }
+        });
+    
+        setDisabledDates(disabled);
+      } catch (error) {
+        console.error('Error fetching unavailable periods:', error);
+      }
+    };
+
+    fetchUnavailablePeriods();
+  }, [vehicleId]);
+
+  const filterDateFunction = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    return !disabledDates.some(disabledDate => {
+      const disabledYear = disabledDate.getFullYear();
+      const disabledMonth = disabledDate.getMonth();
+      const disabledDay = disabledDate.getDate();
+      return year === disabledYear && month === disabledMonth && day === disabledDay;
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({
       ...form,
       [name]: value
+    });
+  };
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    setForm({
+      ...form,
+      startDate: date
+    });
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+    setForm({
+      ...form,
+      endDate: date
     });
   };
 
@@ -43,9 +112,10 @@ function AddMaintModal({ show, onClose, vehicleId }) {
       onClose();
     } catch (error) {
       console.error('Error creating maintenance:', error);
-      // Handle error
     }
   };
+
+  if (!show) return null;
 
   return (
     <div className="modal-overlay">
@@ -57,27 +127,24 @@ function AddMaintModal({ show, onClose, vehicleId }) {
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <TextField
-                label="Start Date"
-                name="startDate"
-                type="date"
-                value={form.startDate}
-                onChange={handleChange}
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                required
+              <DatePicker
+                selected={startDate}
+                onChange={handleStartDateChange}
+                minDate={new Date()}
+                placeholderText="Select start date"
+                className="date-input"
+                filterDate={date => filterDateFunction(date)}
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
-                label="End Date"
-                name="endDate"
-                type="date"
-                value={form.endDate}
-                onChange={handleChange}
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                required
+              <DatePicker
+                selected={endDate}
+                onChange={handleEndDateChange}
+                minDate={startDate}
+                placeholderText="Select end date"
+                className="date-input"
+                filterDate={date => filterDateFunction(date)}
+                disabled={!startDate}
               />
             </Grid>
             <Grid item xs={12} md={6}>

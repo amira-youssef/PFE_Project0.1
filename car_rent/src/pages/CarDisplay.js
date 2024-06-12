@@ -90,7 +90,7 @@ function CarDisplay() {
       const disabledDay = disabledDate.getDate();
       return year === disabledYear && month === disabledMonth && day === disabledDay;
     });
-  };
+  }; 
 
   useEffect(() => {
     if (startDate && endDate && carData) {

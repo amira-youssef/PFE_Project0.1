@@ -1,7 +1,38 @@
 const Rent = require('../models/Rent'); // Adjust the path as necessary
 const Vehicle = require('../models/Vehicle'); // Adjust the path as necessary
 const mongoose = require('mongoose');
-const sendEmail = require('../services/emailService')
+const sendEmail = require('../services/emailService');
+
+
+
+
+const calculateTotalRentPrice = async () => {
+  try {
+    const now = new Date();
+    const acceptedRents = await Rent.find({
+      status: 'accepted',
+      returnDateTime: { $lt: now }
+    });
+
+    const totalRentPrice = acceptedRents.reduce((total, rent) => total + rent.price, 0);
+
+    return totalRentPrice;
+  } catch (error) {
+    console.error('Error calculating total rent price:', error);
+    throw error;
+  }
+};
+
+
+const getTotalAcceptedRentPrice = async (req, res) => {
+  try {
+    const totalRentPrice = await calculateTotalRentPrice();
+    res.status(200).json({ totalRentPrice });
+  } catch (error) {
+    res.status(500).json({ message: 'Error calculating total rent price', error: error.message });
+  }
+};
+
 
 
 const createRent = async (req, res) => {
@@ -199,6 +230,7 @@ const deleteRent = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 const getRentDatesByVehicleId = async (req, res) => {
   const { vehicleId } = req.params;
   console.log("Received vehicle ID:", vehicleId); // Log the received vehicle ID
@@ -208,7 +240,11 @@ const getRentDatesByVehicleId = async (req, res) => {
   }
 
   try {
-    const rents = await Rent.find({ vehicleId }).select('pickupDateTime returnDateTime status');
+    // Fetch rents with status 'accepted' or 'pending'
+    const rents = await Rent.find({
+      vehicleId,
+      status: { $in: ['accepted', 'pending'] }
+    }).select('pickupDateTime returnDateTime status');
     console.log("Fetched rents:", rents);
 
     const formattedRents = rents.map(rent => ({
@@ -226,6 +262,114 @@ const getRentDatesByVehicleId = async (req, res) => {
 
 
 
+
+
+
+const aggregateRents = async (groupBy) => {
+  return await Rent.aggregate([
+    {
+      $group: {
+        _id: {
+          $dateToString: { format: groupBy, date: "$pickupDateTime" }
+        },
+        totalAmount: { $sum: "$price" },
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { _id: 1 }
+    }
+  ]);
+};
+
+const getDailyRents = async (req, res) => {
+  try {
+    const rents = await aggregateRents("%Y-%m-%d");
+    res.json(rents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getWeeklyRents = async (req, res) => {
+  try {
+    const rents = await aggregateRents("%Y-%U");
+    res.json(rents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getMonthlyRents = async (req, res) => {
+  try {
+    const rents = await aggregateRents("%Y-%m");
+    res.json(rents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getSemesterRents = async (req, res) => {
+  try {
+    const rents = await Rent.aggregate([
+      {
+        $group: {
+          _id: {
+            $cond: [
+              { $lte: [{ $month: "$pickupDateTime" }, 6] },
+              { $concat: [{ $year: "$pickupDateTime" }, "-S1"] },
+              { $concat: [{ $year: "$pickupDateTime" }, "-S2"] }
+            ]
+          },
+          totalAmount: { $sum: "$price" },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+    res.json(rents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+const formatDate = (date) => {
+  const d = new Date(date);
+  return d.toISOString().split('T')[0];
+};
+
+const getRevenueByInterval = async (req, res) => {
+  const { interval, agencyId } = req.params;
+  const intervals = {
+    daily: '$dayOfMonth',
+    weekly: '$week',
+    monthly: '$month',
+    yearly: '$year'
+  };
+
+  try {
+    const vehicles = await Vehicle.find({ agencyId });
+    const vehicleIds = vehicles.map(vehicle => vehicle._id);
+
+    const rents = await Rent.aggregate([
+      { $match: { vehicleId: { $in: vehicleIds }, status: 'accepted' } },
+      {
+        $group: {
+          _id: { [intervals[interval]]: '$pickupDateTime' },
+          totalAmount: { $sum: '$price' }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json(rents);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 module.exports = {
   createRent,
   getRentsByAgencyId,
@@ -233,5 +377,12 @@ module.exports = {
   getRentsByUserId,
   updateRentStatus,
   deleteRent,
-  getRentDatesByVehicleId
+  getRentDatesByVehicleId,
+  getTotalAcceptedRentPrice,
+  getDailyRents,
+  getWeeklyRents,
+  getMonthlyRents,
+  getSemesterRents,
+
+  getRevenueByInterval
 };

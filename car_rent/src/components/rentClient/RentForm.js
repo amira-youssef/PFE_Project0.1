@@ -45,6 +45,15 @@ const RentForm = () => {
     if (price !== null) {
       setValue('price', parseFloat(price)); // or parseInt(price, 10) if you want an integer
     }
+
+    // Set user data for driver's information and disable fields
+    if (userData) {
+      setValue('driverInformation.fullName', `${userData.nom} ${userData.prenom}`);
+      setValue('driverInformation.email', userData.email);
+      setValue('driverInformation.phoneNumber', userData.phoneNumber);
+      setValue('driverInformation.address', userData.address);
+      setValue('driverInformation.dateOfBirth', new Date(userData.birthdate).toISOString().split('T')[0]);
+    }
   }, [userData, startDate, endDate, price, setValue]);
 
   const onSubmit = async (data) => {
@@ -106,6 +115,8 @@ const RentForm = () => {
                       label="Driver's Full Name"
                       {...register('driverInformation.fullName', { required: 'Full name is required' })}
                       fullWidth
+                      disabled
+                      defaultValue={`${userData.nom} ${userData.prenom}`}
                       error={!!errors.driverInformation?.fullName}
                       helperText={errors.driverInformation?.fullName?.message}
                     />
@@ -115,6 +126,8 @@ const RentForm = () => {
                       label="Driver's Email"
                       {...register('driverInformation.email', { required: 'Email is required' })}
                       fullWidth
+                      disabled
+                      defaultValue={userData.email}
                       error={!!errors.driverInformation?.email}
                       helperText={errors.driverInformation?.email?.message}
                     />
@@ -122,8 +135,12 @@ const RentForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       label="Driver's Phone Number"
-                      {...register('driverInformation.phoneNumber', { required: 'Phone number is required' })}
+                      {...register('driverInformation.phoneNumber', {
+                        required: 'Phone number is required',
+                        pattern: { value: /^\d{8}$/, message: 'Phone number must be exactly 8 digits' }
+                      })}
                       fullWidth
+                      defaultValue={userData.phoneNumber}
                       error={!!errors.driverInformation?.phoneNumber}
                       helperText={errors.driverInformation?.phoneNumber?.message}
                     />
@@ -133,6 +150,7 @@ const RentForm = () => {
                       label="Driver's Address"
                       {...register('driverInformation.address', { required: 'Address is required' })}
                       fullWidth
+                      defaultValue={userData.address}
                       error={!!errors.driverInformation?.address}
                       helperText={errors.driverInformation?.address?.message}
                     />
@@ -140,7 +158,10 @@ const RentForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       label="Driver's License Number"
-                      {...register('driverInformation.licenseNumber', { required: 'License number is required' })}
+                      {...register('driverInformation.licenseNumber', {
+                        required: 'License number is required',
+                        pattern: { value: /^\d{10}$/, message: 'License number must be exactly 10 digits' }
+                      })}
                       fullWidth
                       error={!!errors.driverInformation?.licenseNumber}
                       helperText={errors.driverInformation?.licenseNumber?.message}
@@ -151,6 +172,8 @@ const RentForm = () => {
                       label="Driver's Date of Birth"
                       {...register('driverInformation.dateOfBirth', { required: 'Date of birth is required' })}
                       fullWidth
+                      disabled
+                      defaultValue={new Date(userData.birthdate).toISOString().split('T')[0]} // Format date here
                       type="date"
                       InputLabelProps={{ shrink: true }}
                       error={!!errors.driverInformation?.dateOfBirth}
@@ -216,7 +239,10 @@ const RentForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       label="Emergency Contact Phone Number"
-                      {...register('emergencyContact.phoneNumber', { required: 'Emergency contact phone number is required' })}
+                      {...register('emergencyContact.phoneNumber', {
+                        required: 'Emergency contact phone number is required',
+                        pattern: { value: /^\d{8}$/, message: 'Phone number must be exactly 8 digits' }
+                      })}
                       fullWidth
                       error={!!errors.emergencyContact?.phoneNumber}
                       helperText={errors.emergencyContact?.phoneNumber?.message}
@@ -250,6 +276,8 @@ const RentForm = () => {
                       fullWidth
                       type="datetime-local"
                       InputLabelProps={{ shrink: true }}
+                      defaultValue={new Date(startDate).toISOString().slice(0, 16)}
+                      disabled
                       error={!!errors.pickupDateTime}
                       helperText={errors.pickupDateTime?.message}
                     />
@@ -270,6 +298,8 @@ const RentForm = () => {
                       fullWidth
                       type="datetime-local"
                       InputLabelProps={{ shrink: true }}
+                      defaultValue={new Date(endDate).toISOString().slice(0, 16)}
+                      disabled
                       error={!!errors.returnDateTime}
                       helperText={errors.returnDateTime?.message}
                     />
@@ -280,6 +310,8 @@ const RentForm = () => {
                       {...register('price', { required: 'Price is required' })}
                       fullWidth
                       type="number"
+                      defaultValue={parseFloat(price)}
+                      disabled
                       error={!!errors.price}
                       helperText={errors.price?.message}
                     />

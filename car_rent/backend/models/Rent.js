@@ -39,20 +39,19 @@ const rentSchema = new mongoose.Schema({
     },
   },
 
-  relationshipToRenter: {
-    type: String,
-    enum: ['family' , 'friend' ],
-    required: true
-  },
+  
   emergencyContact: {
     name: {
       type: String,
-      required: true
+
     },
     phoneNumber: {
       type: String,
-      required: true
-    }
+    },
+    relationshipToRenter: {
+      type: String,
+      enum: ['family' , 'friend' ],
+    },
   }, 
 
   pickupLocation: {
@@ -82,12 +81,12 @@ const rentSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['en ligne', 'sur place'],
+    enum: [ 'sur place'],
     required: true
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'rejected'],
+    enum: ['pending', 'accepted', 'rejected','suspended'],
   },
   hidden: { type: Boolean, default: false },
 

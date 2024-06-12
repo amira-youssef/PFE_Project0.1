@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FilterableUsers from '../components/dashboardA/FilterableUsers';
 import FilterableAgencies from '../components/dashboardA/FilterableAgencies';
 import FilterableTestimonials from '../components/dashboardA/FilterableTestimonials';
@@ -17,23 +17,12 @@ import AddAgencyModal from '../components/dashboardA/AddAgencyModal';
 
 const defaultTheme = createTheme();
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" to="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 export default function AdminDash() {
   const [value, setValue] = React.useState('one');
   const [isAddUserModalOpen, setIsAddUserModalOpen] = React.useState(false);
   const [isAddAgencyModalOpen, setIsAddAgencyModalOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,6 +43,15 @@ export default function AdminDash() {
   const handleCloseAddAgencyModal = () => {
     setIsAddAgencyModalOpen(false);
   };
+  const handleLogout = () => {
+    // Clear all items from local storage
+    localStorage.clear();
+    // Set isLoggedIn to false
+    localStorage.setItem('isLoggedIn', false);
+    // Redirect to login page and reload the window
+    navigate("/login");
+    window.location.reload();
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -68,16 +66,25 @@ export default function AdminDash() {
             flexDirection: 'column',
             alignItems: 'center',
             padding: 2,
+            justifyContent: 'space-between', // This will push the logout button to the bottom
           }}
         >
-          <Typography variant="h6" color="white" gutterBottom>
-            Admin Sidebar
-          </Typography>
-          <button className="sidebar-button" onClick={handleOpenAddUserModal}>
-            Add User
-          </button>
-          <button className="sidebar-button" onClick={handleOpenAddAgencyModal}>
-            Add Agency
+          <Box>
+            <Typography variant="h6" color="white" gutterBottom>
+              Admin Sidebar
+            </Typography>
+            <button className="sidebar-button" onClick={handleOpenAddUserModal}>
+              Add User
+            </button>
+            <button className="sidebar-button" onClick={handleOpenAddUserModal}>
+              Add Manager
+            </button>
+            <button className="sidebar-button" onClick={handleOpenAddAgencyModal}>
+              Add Agency
+            </button>
+          </Box>
+          <button className="sidebar-button logout-button" onClick={handleLogout}>
+            Logout
           </button>
         </Box>
         <Box sx={{ flexGrow: 1 }}>
@@ -93,13 +100,12 @@ export default function AdminDash() {
                   <Grid item xs={12}>
                     <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                       <Typography variant="h6" gutterBottom>
-                        Manage Users
+                        Users Registered to your website 
                       </Typography>
                       <FilterableUsers />
                     </Paper>
                   </Grid>
                 </Grid>
-                <Copyright sx={{ pt: 4 }} />
               </Container>
             </Box>
           )}
@@ -116,7 +122,6 @@ export default function AdminDash() {
                     </Paper>
                   </Grid>
                 </Grid>
-                <Copyright sx={{ pt: 4 }} />
               </Container>
             </Box>
           )}
@@ -133,7 +138,6 @@ export default function AdminDash() {
                     </Paper>
                   </Grid>
                 </Grid>
-                <Copyright sx={{ pt: 4 }} />
               </Container>
             </Box>
           )}
@@ -155,6 +159,12 @@ export default function AdminDash() {
         }
         .sidebar-button:hover {
           background-color: #0056b3;
+        }
+        .logout-button {
+          background-color: #dc3545;
+        }
+        .logout-button:hover {
+          background-color: #c82333;
         }
       `}</style>
     </ThemeProvider>

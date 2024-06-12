@@ -31,6 +31,7 @@ function FilterableCards() {
 
     fetchVehicles();
   }, [agencyId]);
+  
 
   function filterVehicles(type, maker, boite) {
     return vehicles.filter((vehicle) => {

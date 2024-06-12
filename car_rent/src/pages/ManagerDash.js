@@ -21,19 +21,6 @@ import FilterableMaintenances from '../components/dashboardC/MaintTab/Filterable
 
 const defaultTheme = createTheme();
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" to="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 export default function ManagerDash() {
   const [value, setValue] = React.useState('one');
   const [isAddCarModalOpen, setIsAddCarModalOpen] = React.useState(false);
@@ -41,8 +28,8 @@ export default function ManagerDash() {
   const userData = JSON.parse(localStorage.getItem('userData'));
 
   React.useEffect(() => {
-    if (!userData?.agencyId) {
-      navigate('/agencyForm');
+    if (userData && userData.role === 'manager' && !userData.agencyId) {
+      navigate('/createAgency');
     }
   }, [userData, navigate]);
 
@@ -58,16 +45,26 @@ export default function ManagerDash() {
     setIsAddCarModalOpen(false);
   };
 
+  const handleLogout = () => {
+    // Clear all items from local storage
+    localStorage.clear();
+    // Set isLoggedIn to false
+    localStorage.setItem('isLoggedIn', false);
+    // Redirect to login page and reload the window
+    navigate("/login");
+    window.location.reload();
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box className="side-nav" sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
-        <Box  sx={{ width: '25%', padding: 2, pt: 4, margin: '16px',
-        marginTop: '48px', 'backgroundColor': '#fff', height: 'fit-content',
-         'borderRadius': '10px',display: 'flex', flexDirection: 'column', gap:'8%' }}>
+        <Box sx={{ width: '25%', padding: 2, pt: 4, margin: '16px', marginTop: '48px', backgroundColor: '#fff', height: 'fit-content', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '8%' }}>
             <Info />
-            
             <Stats />
+            <button className="sidebar-button logout-button" onClick={handleLogout}>
+              Logout
+            </button>
         </Box>
         <Box sx={{ width: '75%'}}>
           <Tabs value={value} onChange={handleChange} style={{'fontWeight':'bold'}} textColor="secondary" indicatorColor="secondary" centered>
@@ -76,7 +73,7 @@ export default function ManagerDash() {
             <Tab value="three" label="Maintenance" />
           </Tabs>
           {value === 'one' && (
-            <Box sx={{ padding: 4, 'backgroundColor': '#fff', minHeight: 'calc(100vh - 48px)', 'borderRadius': '10px 0 0 0'}}>
+            <Box sx={{ padding: 4, backgroundColor: '#fff', minHeight: 'calc(100vh - 48px)', borderRadius: '10px 0 0 0'}}>
               <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={8} lg={9}>
@@ -95,25 +92,25 @@ export default function ManagerDash() {
                     </Paper>
                   </Grid>
                 </Grid>
-                <Copyright sx={{ pt: 4 }} />
               </Container>
             </Box>
           )}
           {value === 'two' && (
-            <Box sx={{ padding: 4, 'backgroundColor': '#fff', minHeight: 'calc(100vh - 48px)', 'borderRadius': '10px 0 0 0' }}>
-              <div  style={{ display: 'flex', flexDirection: 'row', justifyContent:'space-between' }}>
-              <h3>List of Cars</h3>
-              <div>
-              <Button  variant="contained" color="primary" style={{'backgroundColor': '#ff4d30'}} onClick={handleOpenAddCarModal}>
-                Add New Car
-              </Button></div>
+            <Box sx={{ padding: 4, backgroundColor: '#fff', minHeight: 'calc(100vh - 48px)', borderRadius: '10px 0 0 0' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', justifyContent:'space-between' }}>
+                <h3>List of Cars</h3>
+                <div>
+                  <Button variant="contained" color="primary" style={{ backgroundColor: '#ff4d30' }} onClick={handleOpenAddCarModal}>
+                    Add New Car
+                  </Button>
+                </div>
               </div>
               <FilterableCards />
               <AddCarModal show={isAddCarModalOpen} onClose={handleCloseAddCarModal} />
             </Box>
           )}
           {value === 'three' && (
-            <Box sx={{ padding: 4, 'backgroundColor': '#fff', minHeight: 'calc(100vh - 48px)', 'borderRadius': '10px 0 0 0' }}>
+            <Box sx={{ padding: 4, backgroundColor: '#fff', minHeight: 'calc(100vh - 48px)', borderRadius: '10px 0 0 0' }}>
               <FilterableMaintenances />
             </Box>
           )}
@@ -121,9 +118,28 @@ export default function ManagerDash() {
       </Box>
       <style jsx>{`
         .side-nav {
-        background-color:rgb(255 77 48 / 10%);
+          background-color: rgb(255 77 48 / 10%);
         }
-        
+        .sidebar-button {
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          margin: 10px 0;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+          width: 100%;
+        }
+        .sidebar-button:hover {
+          background-color: #0056b3;
+        }
+        .logout-button {
+          background-color: #dc3545;
+        }
+        .logout-button:hover {
+          background-color: #c82333;
+        }
       `}</style>
     </ThemeProvider>
   );

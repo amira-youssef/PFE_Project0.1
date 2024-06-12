@@ -196,6 +196,33 @@ const updateMaintenance = async (req, res) => {
   }
 };
  
+
+
+
+const calculateTotalMaintenancePrice = async () => {
+  try {
+    const now = new Date();
+    const pastMaintenances = await Maintenance.find({
+      endDate: { $lt: now }
+    });
+
+    const totalMaintenancePrice = pastMaintenances.reduce((total, maintenance) => total + parseFloat(maintenance.price), 0);
+
+    return totalMaintenancePrice;
+  } catch (error) {
+    console.error('Error calculating total maintenance price:', error);
+    throw error;
+  }
+};
+
+const getTotalPastMaintenancePrice = async (req, res) => {
+  try {
+    const totalMaintenancePrice = await calculateTotalMaintenancePrice();
+    res.status(200).json({ totalMaintenancePrice });
+  } catch (error) {
+    res.status(500).json({ message: 'Error calculating total maintenance price', error: error.message });
+  }
+};
   module.exports ={
     createMaintenance , 
     getMaintDatesByVehicleId ,
@@ -204,6 +231,8 @@ const updateMaintenance = async (req, res) => {
     getAllMaintenances , 
     getMaintenanceById , 
     getAllMaintenancesByManagerId,
-    updateMaintenance}
+    updateMaintenance,
+    getTotalPastMaintenancePrice
+  }
 
   
