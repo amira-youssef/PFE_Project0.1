@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import './BookCar.css';
+import "./BookCar.css";
 
 function BookCar() {
   // booking car
@@ -10,12 +10,14 @@ function BookCar() {
   const [dropTime, setDropTime] = useState("");
 
   const [cars, setCars] = useState([]); // state to store fetched car data
-
+  const [agencies, setAgencies] = useState([]);
   useEffect(() => {
     // Fetch car data from API
     const fetchCars = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/vehicles/getAll');
+        const response = await axios.get(
+          "http://localhost:5000/api/vehicles/getAll"
+        );
         setCars(response.data); // assume response.data is an array of car objects
       } catch (error) {
         console.error("Error fetching cars:", error);
@@ -23,6 +25,23 @@ function BookCar() {
     };
 
     fetchCars();
+  }, []);
+
+  useEffect(() => {
+    // Fetch car data from API
+    const fetchAgencies = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/agencies/getAll"
+        );
+        console.log(response);
+        setAgencies(response.data); // assume response.data is an array of car objects
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      }
+    };
+
+    fetchAgencies();
   }, []);
 
   // taking value of booking inputs
@@ -46,7 +65,12 @@ function BookCar() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const errorMsg = document.querySelector(".error-message");
-    if (address === "" || pickTime === "" || dropTime === "" || carType === "") {
+    if (
+      address === "" ||
+      pickTime === "" ||
+      dropTime === "" ||
+      carType === ""
+    ) {
       errorMsg.style.display = "flex";
     } else {
       errorMsg.style.display = "none";
@@ -58,22 +82,21 @@ function BookCar() {
     <section id="booking-section" className="book-section">
       <div className="book-content">
         <div className="book-content__box">
-        
-
-          <p className="error-message">
+          {/*<p className="error-message">
             All fields required! <i onClick={() => document.querySelector(".error-message").style.display = "none"} className="fa-solid fa-xmark"></i>
-          </p>
+          </p>*/}
 
           <form className="box-form" onSubmit={handleSubmit}>
             <div className="box-form__car-type">
               <label>
-                <i className="fa-solid fa-car"></i> &nbsp; Select Your Car Type <b>*</b>
+                <i className="fa-solid fa-car"></i> &nbsp; Select Your Car Type{" "}
+                <b>*</b>
               </label>
               <select value={carType} onChange={handleCar}>
                 <option>Select your car type</option>
                 {cars.map((car) => (
-                  <option key={car.id} value={car.name}>
-                    {car.name}
+                  <option key={car.id} value={car.type}>
+                    {car.type}
                   </option>
                 ))}
               </select>
@@ -81,19 +104,23 @@ function BookCar() {
 
             <div className="box-form__car-type">
               <label>
-                <i className="fa-solid fa-location-dot"></i> &nbsp; Address <b>*</b>
+                <i className="fa-solid fa-location-dot"></i> &nbsp; Address{" "}
+                <b>*</b>
               </label>
-              <input
-                type="text"
-                value={address}
-                onChange={handleAddress}
-                placeholder="Enter address"
-              />
+              <select value={address} onChange={handleAddress}>
+                <option>Select your agency</option>
+                {agencies.map((agency) => (
+                  <option key={agency.id} value={agency.id}>
+                    {agency.address}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="box-form__car-time">
               <label htmlFor="picktime">
-                <i className="fa-regular fa-calendar-days"></i> &nbsp; Pick-up <b>*</b>
+                <i className="fa-regular fa-calendar-days"></i> &nbsp; Pick-up{" "}
+                <b>*</b>
               </label>
               <input
                 id="picktime"
@@ -105,7 +132,8 @@ function BookCar() {
 
             <div className="box-form__car-time">
               <label htmlFor="droptime">
-                <i className="fa-regular fa-calendar-days"></i> &nbsp; Drop-off <b>*</b>
+                <i className="fa-regular fa-calendar-days"></i> &nbsp; Drop-off{" "}
+                <b>*</b>
               </label>
               <input
                 id="droptime"
