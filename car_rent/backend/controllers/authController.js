@@ -55,10 +55,9 @@ const login = async (req, res) => {
     // Check if account is inactive
     if (!user.isActive) {
       console.log('Account is inactive');
-      return res.status(403).json({ message: 'Your account is still inactive. Please wait for approval.' }); // Forbidden
+      return res.status(403).json({ message: 'Your account is still inactive. Please wait for approval.' });
     }
 
-    // Compare password hashes
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       console.error('Invalid password');
@@ -67,9 +66,8 @@ const login = async (req, res) => {
 
     const jwtSecret = process.env.JWT_SECRET;
 
-    // Generate JWT token
-    const token = jwt.sign({ _id: user._id }, jwtSecret, { expiresIn: '30m' }); // Replace '30m' with your desired expiration time
-
+    // Generation
+    const token = jwt.sign({ _id: user._id }, jwtSecret, { expiresIn: '30m' }); 
     console.log(`User ${user.email} logged in successfully`);
     res.json({ token, user: { ...user._doc, password: undefined, role: user.role } });
   } catch (error) {

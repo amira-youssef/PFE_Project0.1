@@ -1,17 +1,17 @@
 /* style/components.css */
 .card {
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  padding: 10px;
-  border-width: 10px;
-  border: 1px solid #ddd;
-  border-left: 20px solid #6ba0d8;
-  margin: auto;
-  margin-top: 65px;
-  border-radius: 8px;
-  background-color: #fff;
-  width: 70%; /* Increase width to make the card larger */
+  display: flex !important; 
+  position: relative !important;
+  flex-direction: row !important;
+  padding: 10px !important;
+  border-width: 10px !important;
+  border: 1px solid #ddd !important;
+  border-left: 20px solid #6ba0d8 !important;
+  margin: auto !important;
+  margin-top: 65px !important;
+  border-radius: 8px !important;
+  background-color: #fff !important;
+  width: 70% !important; /* Increase width to make the card larger */
 }
 
 .card__logo {

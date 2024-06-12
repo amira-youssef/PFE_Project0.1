@@ -24,8 +24,10 @@ const defaultTheme = createTheme();
 export default function ManagerDash() {
   const [value, setValue] = React.useState('one');
   const [isAddCarModalOpen, setIsAddCarModalOpen] = React.useState(false);
+  const [userData, setUserData] = React.useState(JSON.parse(localStorage.getItem('userData')));
+
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  console.log(userData);
 
   React.useEffect(() => {
     if (userData && userData.role === 'manager' && !userData.agencyId) {

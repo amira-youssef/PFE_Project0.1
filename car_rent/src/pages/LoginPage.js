@@ -32,6 +32,8 @@ const LoginPage = () => {
 
       if (role === 'admin') {
         navigate('/admin');
+        window.location.reload();
+
       } else if (role === 'manager') {
         if (!isActive) {
           setModalMessage('Your account is not activated. Check your email inbox in the next few days!');
@@ -39,11 +41,16 @@ const LoginPage = () => {
           return;
         } else if (agencyId) {
           navigate('/manager');
+          window.location.reload();
         } else {
           navigate('/createAgency');
+          window.location.reload();
+
         }
       } else {
         navigate('/home');
+        window.location.reload();
+
       }
 
       localStorage.setItem('isLoggedIn', true);
