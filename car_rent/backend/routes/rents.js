@@ -18,6 +18,7 @@ router.get('/semester', rentController.getSemesterRents);
 
 
 router.get('/revenuePerInterval/:interval/:agencyId', rentController.getRevenueByInterval);
+router.get('/countByAgency/:agencyId', rentController.getNumberOfRentsByAgencyId );
 
 
 module.exports = router;

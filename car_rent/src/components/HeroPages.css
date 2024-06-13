@@ -17,12 +17,10 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Overlay color with transparency */
-    z-index: 1;
   }
   
   .hero-pages__text {
     position: relative;
-    z-index: 2;
   }
   
   .hero-pages__text h3 {

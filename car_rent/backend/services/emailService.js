@@ -5,7 +5,7 @@ const { transporter } = require('../config');
 const sendEmail=(email,subject,html)=>{
 
     var mail = {
-      from: 'Esm l app',
+      from: 'car Rental',
       to: email,
       subject,
       html

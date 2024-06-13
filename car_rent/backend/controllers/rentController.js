@@ -370,6 +370,23 @@ const getRevenueByInterval = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+const getNumberOfRentsByAgencyId = async (req, res) => {
+  const { agencyId } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(agencyId)) {
+    return res.status(400).json({ message: 'Invalid agency ID' });
+  }
+
+  try {
+    const count = await Rent.countDocuments({ agencyId, hidden: false });
+    res.json({ count });
+  } catch (error) {
+    console.error('Error fetching number of rents:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   createRent,
   getRentsByAgencyId,
@@ -383,6 +400,6 @@ module.exports = {
   getWeeklyRents,
   getMonthlyRents,
   getSemesterRents,
-
-  getRevenueByInterval
+  getRevenueByInterval,
+  getNumberOfRentsByAgencyId
 };

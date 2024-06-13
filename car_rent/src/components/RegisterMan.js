@@ -6,6 +6,7 @@ import Alert from '@mui/material/Alert';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import '../style/Registration.css';
+
 function RegisterMan() {
   const { register, handleSubmit, formState: { errors }, watch, reset } = useForm();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -46,11 +47,21 @@ function RegisterMan() {
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
+  };
 
-};
+  const validateBirthdate = (birthdate) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      return age - 1;
+    }
+    return age;
+  };
 
-return(
-	<form onSubmit={handleSubmit(onSubmit)}>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="register-form">
         <TextField
           label="Nom"
@@ -66,13 +77,19 @@ return(
         />
         <TextField
           label="Email"
-          {...register('email', { required: 'Email is required', pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i } })}
+          {...register('email', { 
+            required: 'Email is required', 
+            pattern: { 
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address' 
+            } 
+          })}
           error={!!errors.email}
           helperText={errors.email ? errors.email.message : ''}
         />
         <TextField
           label="Password"
-          {...register('password', { required: 'Password is required', minLength: 6 })}
+          {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Password must be at least 6 characters' } })}
           type="password"
           error={!!errors.password}
           helperText={errors.password ? errors.password.message : ''}
@@ -88,25 +105,38 @@ return(
         />
         <TextField
           label="Birthdate"
-          {...register('birthdate', { required: 'Birthdate is required' })}
+          {...register('birthdate', { 
+            required: 'Birthdate is required',
+            validate: {
+              isAdult: value => validateBirthdate(value) >= 18 || 'You must be at least 18 years old'
+            }
+          })}
           type="date"
           InputLabelProps={{ shrink: true }}
-        />
-        <TextField
-          label="Agence"
-          {...register('agence')}
-          error={!!errors.agence}
-          helperText={errors.agence ? errors.agence.message : ''}
+          error={!!errors.birthdate}
+          helperText={errors.birthdate ? errors.birthdate.message : ''}
         />
         <TextField
           label="Numéro de Téléphone"
-          {...register('numTel')}
+          {...register('numTel', { 
+            required: 'Numéro de Téléphone is required', 
+            pattern: { 
+              value: /^\d{8}$/, 
+              message: 'Phone number must be exactly 8 digits' 
+            } 
+          })}
           error={!!errors.numTel}
           helperText={errors.numTel ? errors.numTel.message : ''}
         />
         <TextField
           label="Buisness Email"
-          {...register('buisnessEmail', { required: 'Buisness Email is required', pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i } })}
+          {...register('buisnessEmail', { 
+            required: 'Business Email is required', 
+            pattern: { 
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address' 
+            } 
+          })}
           error={!!errors.buisnessEmail}
           helperText={errors.buisnessEmail ? errors.buisnessEmail.message : ''}
         />
@@ -117,14 +147,14 @@ return(
           open={openSnackbar}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
- >
+        >
           <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
             {snackbarSeverity === 'success' ? 'Registration successful!' : 'Registration failed'}
           </Alert>
         </Snackbar>
       </div>
     </form>
- );
+  );
 }
 
 export default RegisterMan;

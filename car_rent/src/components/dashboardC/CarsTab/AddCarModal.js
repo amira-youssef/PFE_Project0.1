@@ -67,6 +67,7 @@ function AddCarModal({ show, onClose }) {
       const data = { ...form, agencyId };
       await axios.post('http://localhost:5000/api/vehicles/create', data);
       onClose();
+      window.location.reload(); // Reload the page after closing the modal
     } catch (error) {
       console.error('Error creating vehicle:', error);
       // Handle error

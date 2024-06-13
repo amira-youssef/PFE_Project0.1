@@ -119,7 +119,6 @@ const LoginPage = () => {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #ff2000, #f2d8f4);
             height: 100vh;
             width : 200vh ;
             padding: 20px;

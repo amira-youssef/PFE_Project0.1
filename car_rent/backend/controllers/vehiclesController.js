@@ -230,6 +230,21 @@ const hideVehicle = async (req, res) => {
 };
 
 
+const getNumberOfVehiclesByAgencyId = async (req, res) => {
+  const { agencyId } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(agencyId)) {
+    return res.status(400).json({ message: 'Invalid agency ID' });
+  }
+
+  try {
+    const count = await Vehicle.countDocuments({ agencyId, hidden: false });
+    res.json({ count });
+  } catch (error) {
+    console.error('Error fetching number of vehicles:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
 
@@ -242,5 +257,6 @@ module.exports = {
   updateVehicle,
   getVehiclesByAgencyId,
   uploadFile,
-  hideVehicle
+  hideVehicle,
+  getNumberOfVehiclesByAgencyId
 };

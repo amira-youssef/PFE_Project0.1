@@ -80,13 +80,6 @@ const Navbar = () => {
               <li>
                 <button onClick={() => handleNavClick("/agencies")}>Agencies</button>
               </li>
-              <li>
-                <button onClick={() => handleNavClick("/contact")}>Contact Us</button>
-              </li>
-              <li>
-                <button onClick={() => handleNavClick("/how-to")}>How to ?</button>
-              </li>
-              {/* Add more navigation links if needed */}
             </ul>
           </div>
         </section>

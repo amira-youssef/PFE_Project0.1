@@ -89,8 +89,8 @@ const AgenciesList = () => {
                         <span>{agency.email}</span>
                       </div>
                     </div>
-                    <div className="models-div__box__btn">
-                      <button onClick={() => openModal(agency)}>
+                    <div >
+                      <button onClick={() => openModal(agency)} className="models-div__box__descr__btn">
                         View Details
                       </button>
                     </div>

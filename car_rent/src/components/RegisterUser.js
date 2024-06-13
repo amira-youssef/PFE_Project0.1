@@ -57,6 +57,17 @@ function RegisterUser() {
     setOpenSnackbar(false);
   };
 
+  const validateBirthdate = (birthdate) => {
+    const today = new Date();
+    const birthDate = new Date(birthdate);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      return age - 1;
+    }
+    return age;
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="register-form">
@@ -75,13 +86,31 @@ function RegisterUser() {
         />
         <TextField
           label="Email"
-          {...register('email', { required: 'Email is required', pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i } })}
+          {...register('email', { 
+            required: 'Email is required', 
+            pattern: { 
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address' 
+            } 
+          })}
           error={!!errors.email}
           helperText={errors.email ? errors.email.message : ''}
         />
         <TextField
+          label="Phone Number"
+          {...register('phoneNumber', { 
+            required: 'Phone number is required', 
+            pattern: { 
+              value: /^\d{8}$/, 
+              message: 'Phone number must be exactly 8 digits' 
+            } 
+          })}
+          error={!!errors.phoneNumber}
+          helperText={errors.phoneNumber ? errors.phoneNumber.message : ''}
+        />
+        <TextField
           label="Password"
-          {...register('password', { required: 'Password is required', minLength: 6 })}
+          {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Password must be at least 6 characters' } })}
           type="password"
           error={!!errors.password}
           helperText={errors.password ? errors.password.message : ''}
@@ -97,9 +126,16 @@ function RegisterUser() {
         />
         <TextField
           label="Birthdate"
-          {...register('birthdate', { required: 'Birthdate is required' })}
+          {...register('birthdate', { 
+            required: 'Birthdate is required',
+            validate: {
+              isAdult: value => validateBirthdate(value) >= 18 || 'You must be at least 18 years old'
+            }
+          })}
           type="date"
           InputLabelProps={{ shrink: true }}
+          error={!!errors.birthdate}
+          helperText={errors.birthdate ? errors.birthdate.message : ''}
         />
         <Button type="submit" variant="contained">
           Register
