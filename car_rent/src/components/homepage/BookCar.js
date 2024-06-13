@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "./BookCar.css";
 
 function BookCar() {
-  // booking car
-  const [carType, setCarType] = useState("");
-  const [address, setAddress] = useState("");
-  const [pickTime, setPickTime] = useState("");
-  const [dropTime, setDropTime] = useState("");
+  const [agencyId, setAgencyId] = useState("");
+  const [type, setType] = useState("");
+  const [pickupDate, setPickupDate] = useState(null);
+  const [dropoffDate, setDropoffDate] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
 
-  const [cars, setCars] = useState([]); // state to store fetched car data
+  const [vehicles, setVehicles] = useState([]);
   const [agencies, setAgencies] = useState([]);
+
   useEffect(() => {
-    // Fetch car data from API
     const fetchCars = async () => {
       try {
         const response = await axios.get(
           "http://localhost:5000/api/vehicles/getAll"
         );
-        setCars(response.data); // assume response.data is an array of car objects
+        setVehicles(response.data);
       } catch (error) {
         console.error("Error fetching cars:", error);
       }
@@ -28,14 +29,12 @@ function BookCar() {
   }, []);
 
   useEffect(() => {
-    // Fetch car data from API
     const fetchAgencies = async () => {
       try {
         const response = await axios.get(
           "http://localhost:5000/api/agencies/getAll"
         );
-        console.log(response);
-        setAgencies(response.data); // assume response.data is an array of car objects
+        setAgencies(response.data);
       } catch (error) {
         console.error("Error fetching cars:", error);
       }
@@ -44,37 +43,23 @@ function BookCar() {
     fetchAgencies();
   }, []);
 
-  // taking value of booking inputs
-  const handleCar = (e) => {
-    setCarType(e.target.value);
-  };
-
-  const handleAddress = (e) => {
-    setAddress(e.target.value);
-  };
-
-  const handlePickTime = (e) => {
-    setPickTime(e.target.value);
-  };
-
-  const handleDropTime = (e) => {
-    setDropTime(e.target.value);
-  };
-
-  // handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const errorMsg = document.querySelector(".error-message");
-    if (
-      address === "" ||
-      pickTime === "" ||
-      dropTime === "" ||
-      carType === ""
-    ) {
-      errorMsg.style.display = "flex";
-    } else {
-      errorMsg.style.display = "none";
-      // handle booking logic here
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/vehicles/search",
+        {
+          params: {
+            agencyId: agencyId,
+            type: type,
+            pickupDate: new Date(pickupDate).toISOString(),
+            dropoffDate: new Date(dropoffDate).toISOString(),
+          },
+        }
+      );
+      setSearchResults(response.data);
+    } catch (err) {
+      console.error("Error fetching vehicles:", err);
     }
   };
 
@@ -82,19 +67,14 @@ function BookCar() {
     <section id="booking-section" className="book-section">
       <div className="book-content">
         <div className="book-content__box">
-          {/*<p className="error-message">
-            All fields required! <i onClick={() => document.querySelector(".error-message").style.display = "none"} className="fa-solid fa-xmark"></i>
-          </p>*/}
-
           <form className="box-form" onSubmit={handleSubmit}>
-            <div className="box-form__car-type">
+            <div className="box-form__field select">
               <label>
-                <i className="fa-solid fa-car"></i> &nbsp; Select Your Car Type{" "}
-                <b>*</b>
+                <i className="fa-solid fa-car"></i> &nbsp; Vehicle Type <b>*</b>
               </label>
-              <select value={carType} onChange={handleCar}>
-                <option>Select your car type</option>
-                {cars.map((car) => (
+              <select value={type} onChange={(e) => setType(e.target.value)}>
+                <option>Select vehicle type</option>
+                {vehicles.map((car) => (
                   <option key={car.id} value={car.type}>
                     {car.type}
                   </option>
@@ -102,15 +82,18 @@ function BookCar() {
               </select>
             </div>
 
-            <div className="box-form__car-type">
+            <div className="box-form__field select">
               <label>
                 <i className="fa-solid fa-location-dot"></i> &nbsp; Address{" "}
                 <b>*</b>
               </label>
-              <select value={address} onChange={handleAddress}>
-                <option>Select your agency</option>
+              <select
+                value={agencyId}
+                onChange={(e) => setAgencyId(e.target.value)}
+              >
+                <option>Select your closest agency</option>
                 {agencies.map((agency) => (
-                  <option key={agency.id} value={agency.id}>
+                  <option key={agency._id} value={agency._id}>
                     {agency.address}
                   </option>
                 ))}
@@ -118,28 +101,28 @@ function BookCar() {
             </div>
 
             <div className="box-form__car-time">
-              <label htmlFor="picktime">
+              <label htmlFor="pickupDate">
                 <i className="fa-regular fa-calendar-days"></i> &nbsp; Pick-up{" "}
                 <b>*</b>
               </label>
               <input
-                id="picktime"
-                value={pickTime}
-                onChange={handlePickTime}
                 type="date"
+                value={pickupDate}
+                onChange={(e) => setPickupDate(e.target.value)}
+                required
               />
             </div>
 
             <div className="box-form__car-time">
-              <label htmlFor="droptime">
+              <label htmlFor="dropoffDate">
                 <i className="fa-regular fa-calendar-days"></i> &nbsp; Drop-off{" "}
                 <b>*</b>
               </label>
               <input
-                id="droptime"
-                value={dropTime}
-                onChange={handleDropTime}
                 type="date"
+                value={dropoffDate}
+                onChange={(e) => setDropoffDate(e.target.value)}
+                required
               />
             </div>
 
@@ -147,6 +130,35 @@ function BookCar() {
           </form>
         </div>
       </div>
+      {searchResults.length > 0 && (
+        <div className="book-content">
+          <div className="book-content__box">
+            <div className="box-form__car-time">
+              <label>
+                <i className="fa-regular"></i> &nbsp; Available Vehicles{" "}
+                <b>*</b>
+              </label>
+              <ul class="list-group">
+                {searchResults.map((vehicle) => (
+                   <div className="list-group-item">
+                   <Link
+                     to={`/cars/${vehicle._id}`}
+                     style={{
+                       fontSize: '14px',
+                       fontWeight: 'normal',
+                       color: '#333',
+                       textDecoration: 'none',
+                     }}
+                   >
+                     {vehicle.maker} {vehicle.model}
+                   </Link>
+                 </div>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -190,11 +190,6 @@ const getVehiclesByAgencyId = async (req, res) => {
 };
 
 
-
-
-
-
-
 const hideVehicle = async (req, res) => {
   const { id } = req.params;
 
@@ -229,6 +224,66 @@ const hideVehicle = async (req, res) => {
   }
 };
 
+const searchVehicles = async (req, res) => {
+  const { agencyId, type, pickupDate, dropoffDate } = req.query;
+
+  if (!agencyId || !type || !pickupDate || !dropoffDate) {
+    return res.status(400).json({ error: 'agencyId, type, pickupDate, and dropoffDate are required' });
+  }
+
+  try {
+    const pickup = new Date(pickupDate);
+    const dropoff = new Date(dropoffDate);
+
+    console.log('Received search parameters:', { agencyId, type, pickup, dropoff });
+
+    const vehicles = await Vehicle.find({ agencyId: new mongoose.Types.ObjectId(agencyId), type: type });
+    console.log('Vehicles found:', vehicles);
+
+    const availableVehicles = await Promise.all(
+      vehicles.map(async (vehicle) => {
+        const vehicleId = vehicle._id;
+
+        const overlappingRents = await Rent.find({
+          vehicleId: vehicleId,
+          $or: [
+            {
+              $and: [
+                { pickupDateTime: { $lt: dropoff } },
+                { returnDateTime: { $gt: pickup } }
+              ]
+            }
+          ]
+        });
+
+        const overlappingMaintenances = await Maintenance.find({
+          vehicleId: vehicleId,
+          $or: [
+            {
+              $and: [
+                { startDate: { $lt: dropoff } },
+                { endDate: { $gt: pickup } }
+              ]
+            }
+          ]
+        });
+
+        if (overlappingRents.length === 0 && overlappingMaintenances.length === 0) {
+          return vehicle;
+        }
+        return null;
+      })
+    );
+
+    const filteredVehicles = availableVehicles.filter(vehicle => vehicle !== null);
+    res.json(filteredVehicles);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 
 const getNumberOfVehiclesByAgencyId = async (req, res) => {
   const { agencyId } = req.params;
@@ -258,5 +313,6 @@ module.exports = {
   getVehiclesByAgencyId,
   uploadFile,
   hideVehicle,
-  getNumberOfVehiclesByAgencyId
+  getNumberOfVehiclesByAgencyId,
+  searchVehicles
 };

@@ -45,14 +45,72 @@
 }
 
 .box-form button {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem 12px;
   background-color: #ff5330;
   color: white;
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  margin-top: 30px;
 }
 
 .box-form button:hover {
   background-color: #e04e2a;
+}
+.list-group {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.list-group-item {
+  position: relative;
+  display: block;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.list-group-item:first-child {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.list-group-item:last-child {
+  margin-bottom: 0;
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.list-group-item:hover {
+  z-index: 1;
+  text-decoration: none;
+  background-color: #f9f9f9;
+}
+
+.list-group-item.active {
+  z-index: 2;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.list-group-item.disabled,
+.list-group-item:disabled {
+  color: #6c757d;
+  background-color: #f9f9f9;
+}
+
+.list-group-item.disabled:hover,
+.list-group-item:disabled:hover {
+  background-color: #f9f9f9;
+}
+
+.list-group-item-action {
+  width: 100%;
+  color: #495057;
+  text-align: inherit;
+  text-align: -webkit-match-parent;
 }

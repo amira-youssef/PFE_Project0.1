@@ -13,6 +13,8 @@ router.post('/upload', vehiclesController.uploadFile);
 router.put('/hide/:id', vehiclesController.hideVehicle);
 
 router.get('/countByAgency/:agencyId', vehiclesController.getNumberOfVehiclesByAgencyId  );
+router.get('/search', vehiclesController.searchVehicles);
+
 
 
 module.exports = router;
