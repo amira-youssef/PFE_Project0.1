@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Maintenance = require('../models/Maintenance');
+const Vehicle = require('../models/Vehicle');
 const { default: mongoose } = require('mongoose');
 
 
@@ -114,7 +115,7 @@ const getAllMaintenances = async (req, res) => {
   }
 };
 
-// Get maintenance by maintenance ID
+
 const getMaintenanceById = async (req, res) => {
   const { id } = req.params;
 
@@ -215,14 +216,36 @@ const calculateTotalMaintenancePrice = async () => {
   }
 };
 
+
+
+
 const getTotalPastMaintenancePrice = async (req, res) => {
   try {
-    const totalMaintenancePrice = await calculateTotalMaintenancePrice();
-    res.status(200).json({ totalMaintenancePrice });
+    const { agencyId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(agencyId)) {
+      return res.status(400).json({ message: 'Invalid agency ID' });
+    }
+
+    const vehicles = await Vehicle.find({ agencyId });
+    const vehicleIds = vehicles.map(vehicle => vehicle._id);
+
+    const totalMaintenancePrice = await Maintenance.aggregate([
+      { $match: { 
+          vehicleId: { $in: vehicleIds }, 
+          endDate: { $lt: new Date() }
+        } 
+      },
+      { $group: { _id: null, total: { $sum: '$cost' } } }
+    ]);
+
+    res.status(200).json({ totalMaintenancePrice: totalMaintenancePrice[0]?.total || 0 });
   } catch (error) {
+    console.error('Error calculating total maintenance price:', error);
     res.status(500).json({ message: 'Error calculating total maintenance price', error: error.message });
   }
 };
+
   module.exports ={
     createMaintenance , 
     getMaintDatesByVehicleId ,

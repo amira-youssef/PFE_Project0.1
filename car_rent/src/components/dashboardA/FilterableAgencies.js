@@ -41,9 +41,7 @@ function FilterableAgencies() {
 
   return (
     <div className="container">
-      <button className="add-button" onClick={handleOpenAddAgencyModal}>
-        <FontAwesomeIcon icon={faPlus} /> Add Agency
-      </button>
+
       <table className="agency-table">
         <thead>
           <tr>
@@ -51,7 +49,7 @@ function FilterableAgencies() {
             <th>Address</th>
             <th>City</th>
             <th>State</th>
-            <th>Actions</th>
+            
           </tr>
         </thead>
         <tbody>
@@ -61,11 +59,7 @@ function FilterableAgencies() {
               <td>{agency.address}</td>
               <td>{agency.city}</td>
               <td>{agency.state}</td>
-              <td>
-                <button onClick={() => handleDeleteAgency(agency._id)} className="delete-button">
-                  <FontAwesomeIcon icon={faTrashAlt} /> Delete
-                </button>
-              </td>
+              
             </tr>
           ))}
         </tbody>

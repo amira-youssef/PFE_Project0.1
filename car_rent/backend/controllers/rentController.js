@@ -1,5 +1,5 @@
-const Rent = require('../models/Rent'); // Adjust the path as necessary
-const Vehicle = require('../models/Vehicle'); // Adjust the path as necessary
+const Rent = require('../models/Rent'); 
+const Vehicle = require('../models/Vehicle'); 
 const mongoose = require('mongoose');
 const sendEmail = require('../services/emailService');
 
@@ -23,16 +23,28 @@ const calculateTotalRentPrice = async () => {
   }
 };
 
-
 const getTotalAcceptedRentPrice = async (req, res) => {
   try {
-    const totalRentPrice = await calculateTotalRentPrice();
-    res.status(200).json({ totalRentPrice });
+    const { agencyId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(agencyId)) {
+      return res.status(400).json({ message: 'Invalid agency ID' });
+    }
+
+    const vehicles = await Vehicle.find({ agencyId });
+    const vehicleIds = vehicles.map(vehicle => vehicle._id);
+
+    const totalRentPrice = await Rent.aggregate([
+      { $match: { vehicleId: { $in: vehicleIds }, status: 'accepted', returnDateTime: { $lt: new Date() } } },
+      { $group: { _id: null, total: { $sum: '$price' } } }
+    ]);
+
+    res.status(200).json({ totalRentPrice: totalRentPrice[0]?.total || 0 });
   } catch (error) {
+    console.error('Error calculating total rent price:', error);
     res.status(500).json({ message: 'Error calculating total rent price', error: error.message });
   }
 };
-
 
 
 const createRent = async (req, res) => {
@@ -75,7 +87,6 @@ const createRent = async (req, res) => {
    
     await newRent.save();
 
-    // Increment vehicle count
     await Vehicle.findByIdAndUpdate(vehicleId, { $inc: { count: 1 } });
 
     res.status(201).json(newRent);
@@ -90,18 +101,14 @@ const getRentsByAgencyId = async (req, res) => {
   try {
     const { agencyId } = req.params;
 
-    // Validate agencyId
     if (!mongoose.Types.ObjectId.isValid(agencyId)) {
       return res.status(400).json({ message: 'Invalid agencyId' });
     }
 
-    // Find all vehicles by agencyId
     const vehicles = await Vehicle.find({ agencyId });
 
-    // Extract vehicleIds
     const vehicleIds = vehicles.map(vehicle => vehicle._id);
 
-    // Find all rents with those vehicleIds
     const rents = await Rent.find({ vehicleId: { $in: vehicleIds } });
 
     res.status(200).json(rents);
@@ -110,17 +117,14 @@ const getRentsByAgencyId = async (req, res) => {
   }
 };
 
-// Get all rents by vehicleId
 const getRentsByVehicleId = async (req, res) => {
   try {
     const { vehicleId } = req.params;
 
-    // Validate vehicleId
     if (!mongoose.Types.ObjectId.isValid(vehicleId)) {
       return res.status(400).json({ message: 'Invalid vehicleId' });
     }
 
-    // Find all rents by vehicleId
     const rents = await Rent.find({ vehicleId });
 
     res.status(200).json(rents);
@@ -129,35 +133,35 @@ const getRentsByVehicleId = async (req, res) => {
   }
 };
 
-// Get all rents by userId
+
+
+
+
 const getRentsByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // Validate userId
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: 'Invalid user ID format' });
     }
 
-    // Fetch rents by user ID and populate vehicle details
     const rents = await Rent.find({ userId }).populate('vehicleId', 'maker model mainImage');
 
     if (!rents.length) {
       return res.status(404).json({ message: 'No rent records found for this user.' });
     }
 
-    // Transform data to include maker, model, and mainImage from vehicle
     const transformedRents = rents.map(rent => ({
       _id: rent._id,
-      vehicleId: rent.vehicleId._id,
+      vehicleId: rent.vehicleId ? rent.vehicleId._id : null,
       userId: rent.userId,
       pickupDateTime: rent.pickupDateTime,
       returnDateTime: rent.returnDateTime,
       status: rent.status,
       hidden: rent.hidden,
-      maker:  rent.vehicleId.maker ,
-      model:  rent.vehicleId.model ,
-      mainImage:  rent.vehicleId.mainImage ,
+      maker: rent.vehicleId ? rent.vehicleId.maker : 'N/A',
+      model: rent.vehicleId ? rent.vehicleId.model : 'N/A',
+      mainImage: rent.vehicleId ? rent.vehicleId.mainImage : 'placeholder.jpg', 
     }));
 
     return res.status(200).json(transformedRents);
@@ -208,29 +212,27 @@ const updateRentStatus = async (req, res) => {
   }
 };
 
-
 const deleteRent = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validate the rent ID
-   // if (!mongoose.Types.ObjectId.isValid(id)) {
-     // return res.status(400).json({ message: 'Invalid rent ID' });
-    //}
+    const rent = await Rent.findById(id);
 
-    // Find and delete the rent by ID
-    const deletedRent = await Rent.findByIdAndDelete(id);
-    console.log(id);
-    if (!deletedRent) {
+    if (!rent) {
       return res.status(404).json({ message: 'Rent not found' });
     }
+
+    if (rent.status !== 'pending') {
+      return res.status(400).json({ message: 'Only pending rents can be deleted' });
+    }
+
+    await Rent.findByIdAndDelete(id);
 
     res.status(200).json({ message: 'Rent deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 const getRentDatesByVehicleId = async (req, res) => {
   const { vehicleId } = req.params;
   console.log("Received vehicle ID:", vehicleId); // Log the received vehicle ID
@@ -240,7 +242,6 @@ const getRentDatesByVehicleId = async (req, res) => {
   }
 
   try {
-    // Fetch rents with status 'accepted' or 'pending'
     const rents = await Rent.find({
       vehicleId,
       status: { $in: ['accepted', 'pending'] }
@@ -379,7 +380,15 @@ const getNumberOfRentsByAgencyId = async (req, res) => {
   }
 
   try {
-    const count = await Rent.countDocuments({ agencyId, hidden: false });
+    // Find all vehicles by agencyId
+    const vehicles = await Vehicle.find({ agencyId });
+
+    // Extract vehicleIds
+    const vehicleIds = vehicles.map(vehicle => vehicle._id);
+
+    // Count all rents with those vehicleIds and hidden: false
+    const count = await Rent.countDocuments({ vehicleId: { $in: vehicleIds }, hidden: false });
+
     res.json({ count });
   } catch (error) {
     console.error('Error fetching number of rents:', error);

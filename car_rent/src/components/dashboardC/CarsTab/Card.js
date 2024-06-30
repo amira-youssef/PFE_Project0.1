@@ -29,7 +29,6 @@ function Card({
   count,
   address,
   addTagHandler,
-  unavailableDates,
   hidden
 }) {
   const [isCarModalOpen, setIsCarModalOpen] = useState(false);
@@ -113,7 +112,6 @@ function Card({
         {hidden && <span className='tag tag--red'>Dismissed</span>}
       </div>
       <div className='card__icons'>
-        {!hidden && <FontAwesomeIcon icon={faEdit} className='icon' />}
         <FontAwesomeIcon icon={faExpand} className='icon' onClick={handleExpand} />
         {!hidden && <FontAwesomeIcon icon={faTrash} className='icon' onClick={handleDelete} />}
         {!hidden && <FontAwesomeIcon icon={faTools} className='icon' onClick={handleOpenMaintenanceModal} />}

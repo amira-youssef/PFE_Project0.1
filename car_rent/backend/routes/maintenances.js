@@ -11,7 +11,7 @@ router.get('/getAll', maintenanceController.getAllMaintenances);
 router.get('/getById/:id', maintenanceController.getMaintenanceById);
 router.get('/getAllByManager/:managerId', maintenanceController.getAllMaintenancesByManagerId);
 router.put('/update/:id', maintenanceController.updateMaintenance);
-router.get('/totalPastMaintenancePrice', maintenanceController.getTotalPastMaintenancePrice);
+router.get('/totalPastMaintenancePrice/:agencyId', maintenanceController.getTotalPastMaintenancePrice);
 
 
 module.exports = router;

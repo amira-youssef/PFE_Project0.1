@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, ListGroup, Image, Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import '../components/dashboardC/CarsTab/style/components.css'; // Import the CSS file
 
 const UserProfile = () => {
   const [rents, setRents] = useState([]);
@@ -34,74 +34,93 @@ const UserProfile = () => {
   }, [userData]);
 
   const handleLogout = () => {
-    // Clear all items from local storage
     localStorage.clear();
-    // Set isLoggedIn to false
     localStorage.setItem('isLoggedIn', false);
-    // Redirect to login page and reload the window
     navigate("/login");
     window.location.reload();
   };
 
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this rent?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:5000/api/rents/deleteRent/${id}`);
+        setRents(rents.filter(rent => rent._id !== id));
+      } catch (error) {
+        console.error('Error deleting rent:', error);
+      }
+    }
+  };
+
   if (!userData) {
-    return null; // Optionally, show a loading spinner or message
+    return null;
   }
 
   return (
-    <Container>
-      <Row className="justify-content-center">
-        <Col xs={12} md={4}>
-          <Card className="text-center mb-4">
-            <Card.Body>
-              <Image 
-                src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" 
-                roundedCircle 
-                style={{ width: '100px', height: '100px', marginBottom: '1rem' }} 
-              />
-              <Card.Title>User Information</Card.Title>
-              <Card.Text><strong>Name:</strong> {userData.nom} {userData.prenom}</Card.Text>
-              <Card.Text><strong>Email:</strong> {userData.email}</Card.Text>
-              <Card.Text><strong>Address:</strong> {userData.address}</Card.Text>
-              <Button variant="danger" onClick={handleLogout} className="mt-3">
-                Logout
-              </Button>
-            </Card.Body>
-          </Card>
-        </Col>
+    <div className="container">
+      <div className="justify-content-center">
+        <div className="col-12 col-md-4">
+          <div className="card text-center mb-4">
+            <div className="card-body">
+              <div className="card__logo">
+                <img 
+                  src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" 
+                  alt="Profile Avatar"
+                  className="rounded-circle"
+                  style={{ width: '100px', height: '100px', marginBottom: '1rem' }} 
+                />
+              </div>
+              <div className="card__data">
+                <h3 className="card__title">User Information</h3>
+                <p className="card__description"><strong>Name:</strong> {userData.nom} {userData.prenom}</p>
+                <p className="card__description"><strong>Email:</strong> {userData.email}</p>
+                <p className="card__description"><strong>Address:</strong> {userData.address}</p>
+                <button className="btn btn-danger mt-3" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <Col xs={12} md={8}>
-          <Card>
-            <Card.Body>
-              <Card.Title>Rents</Card.Title>
-              <ListGroup variant="flush">
+        <div className="col-12 col-md-8">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card__title">Rents</h3>
+              <ul className="list-group list-group-flush">
                 {rents.length > 0 ? (
                   rents.map((rent) => {
-                    const { maker, model, mainImage } = rent;
+                    const { maker, model, mainImage, status, _id } = rent;
                     return (
-                      <ListGroup.Item key={rent._id}>
-                        <Row className="align-items-center">
-                          <Col xs={3}>
-                            <Image src={`http://localhost:5000/${mainImage}`} rounded fluid />
-                          </Col>
-                          <Col>
-                            <strong>Vehicle:</strong> {maker} {model}<br />
-                            <strong>Pickup:</strong> {new Date(rent.pickupDateTime).toLocaleDateString()}<br />
-                            <strong>Return:</strong> {new Date(rent.returnDateTime).toLocaleDateString()}<br />
-                            <strong>Status:</strong> {rent.status}
-                          </Col>
-                        </Row>
-                      </ListGroup.Item>
+                      <li className="list-group-item" key={_id}>
+                        <div className="row align-items-center">
+                          <div className="col-3 card__logo">
+                            <img src={`http://localhost:5000/${mainImage}`} alt={`${maker} ${model}`} className="card__logo img" />
+                          </div>
+                          <div className="row">
+                            <div className="card__data">
+                              {status === 'pending' && (
+                                <button className="btn btn-danger" onClick={() => handleDelete(_id)}>Delete</button>
+                              )}
+                              <p className="card__description"><strong>Vehicle:</strong> {maker} {model}</p>
+                              <p className="card__description"><strong>Pickup:</strong> {new Date(rent.pickupDateTime).toLocaleDateString()}</p>
+                              <p className="card__description"><strong>Return:</strong> {new Date(rent.returnDateTime).toLocaleDateString()}</p>
+                              <p className="card__description"><strong>Status:</strong> {status}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
                     );
                   })
                 ) : (
-                  <Card.Text>No rents found.</Card.Text>
+                  <p>No rents found.</p>
                 )}
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

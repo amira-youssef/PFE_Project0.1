@@ -194,31 +194,6 @@ const RentForm = () => {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={10}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" component="h2">
-                  Relationship to Renter
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      select
-                      SelectProps={{ native: true }}
-                      {...register('relationshipToRenter', { required: 'Relationship is required' })}
-                      fullWidth
-                      error={!!errors.relationshipToRenter}
-                      helperText={errors.relationshipToRenter?.message}
-                    >
-                      <option value="">Select Relationship</option>
-                      <option value="family">Family</option>
-                      <option value="friend">Friend</option>
-                    </TextField>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
 
           <Grid item xs={12} md={10}>
             <Card>
@@ -250,9 +225,30 @@ const RentForm = () => {
                   </Grid>
                 </Grid>
               </CardContent>
+              <CardContent>
+                <Typography variant="h5" component="h2">
+                  Relationship to Renter
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      select
+                      SelectProps={{ native: true }}
+                      {...register('relationshipToRenter', { required: 'Relationship is required' })}
+                      fullWidth
+                      error={!!errors.relationshipToRenter}
+                      helperText={errors.relationshipToRenter?.message}
+                    >
+                      <option value="">Select Relationship</option>
+                      <option value="family">Family</option>
+                      <option value="friend">Friend</option>
+                    </TextField>
+                  </Grid>
+                </Grid>
+              </CardContent>
             </Card>
           </Grid>
-
+          
           <Grid item xs={12} md={10}>
             <Card>
               <CardContent>
@@ -326,7 +322,6 @@ const RentForm = () => {
                       helperText={errors.paymentMethod?.message}
                     >
                       <option value="">Select Payment Method</option>
-                      <option value="en ligne">En Ligne</option>
                       <option value="sur place">Sur Place</option>
                     </TextField>
                   </Grid>

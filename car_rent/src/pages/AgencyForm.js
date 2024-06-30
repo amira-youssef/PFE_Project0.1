@@ -43,13 +43,13 @@ const AgencyForm = () => {
 
     if (!formData.zipCode) {
       newErrors.zipCode = 'Zip Code is required';
-    } else if (!/^\d{5}$/.test(formData.zipCode)) {
+    } else if (!/^\d{4}$/.test(formData.zipCode)) {
       newErrors.zipCode = 'Zip Code must be 5 digits';
     }
 
     if (!formData.phoneNumber) {
       newErrors.phoneNumber = 'Phone Number is required';
-    } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
+    } else if (!/^\d{8}$/.test(formData.phoneNumber)) {
       newErrors.phoneNumber = 'Phone Number must be 10 digits';
     }
 

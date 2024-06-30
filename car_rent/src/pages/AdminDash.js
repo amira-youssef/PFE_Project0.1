@@ -71,17 +71,9 @@ export default function AdminDash() {
         >
           <Box>
             <Typography variant="h6" color="white" gutterBottom>
-              Admin Sidebar
+               Welcome Admin !
             </Typography>
-            <button className="sidebar-button" onClick={handleOpenAddUserModal}>
-              Add User
-            </button>
-            <button className="sidebar-button" onClick={handleOpenAddUserModal}>
-              Add Manager
-            </button>
-            <button className="sidebar-button" onClick={handleOpenAddAgencyModal}>
-              Add Agency
-            </button>
+           
           </Box>
           <button className="sidebar-button logout-button" onClick={handleLogout}>
             Logout
@@ -91,7 +83,7 @@ export default function AdminDash() {
           <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary" centered>
             <Tab value="one" label="Users" />
             <Tab value="two" label="Agencies" />
-            <Tab value="three" label="Testimonials" />
+          
           </Tabs>
           {value === 'one' && (
             <Box sx={{ padding: 2 }}>
@@ -125,26 +117,10 @@ export default function AdminDash() {
               </Container>
             </Box>
           )}
-          {value === 'three' && (
-            <Box sx={{ padding: 2 }}>
-              <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="h6" gutterBottom>
-                        Manage Testimonials
-                      </Typography>
-                      <FilterableTestimonials />
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </Container>
-            </Box>
-          )}
+         
         </Box>
       </Box>
-      <AddUserModal show={isAddUserModalOpen} onClose={handleCloseAddUserModal} />
-      <AddAgencyModal show={isAddAgencyModalOpen} onClose={handleCloseAddAgencyModal} />
+     
       <style jsx>{`
         .sidebar-button {
           background-color: #007bff;

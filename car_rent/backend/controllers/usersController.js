@@ -60,11 +60,11 @@ const getUsers = async (req, res) => {
 
 
   const updateUser = async (req, res) => {
-    const { nom, prenom, email, password, birthdate } = req.body; // Destructure user data from request body
+    const { nom, prenom, email, password, birthdate } = req.body; 
   
     try {
       // Find the user to update by ID (replace with your actual logic to identify the user)
-      const userId = req.params.userId; // Assuming you have a userId parameter in the route
+      const userId = req.params.userId; 
       const user = await User.findById(userId);
   
       if (!user) {
@@ -72,10 +72,10 @@ const getUsers = async (req, res) => {
       }
   
       // Update user properties (only update properties that are provided)
-      user.nom = nom || user.nom; // Update if nom is provided, otherwise keep existing value
+      user.nom = nom || user.nom; 
       user.prenom = prenom || user.prenom;
       user.email = email || user.email;
-      user.password = password || user.password; // Update password only if provided
+      user.password = password || user.password; 
       user.birthdate = birthdate || user.birthdate;
   
       // Save the updated user document
@@ -89,25 +89,23 @@ const getUsers = async (req, res) => {
   };
   
   const updateManager = async (req, res) => {
-    const { nom, prenom, email, password, birthdate, agence, numTel, buisnessEmail } = req.body; // Destructure user data
+    const { nom, prenom, email, password, birthdate, agence, numTel, buisnessEmail } = req.body; 
   
     try {
-      // Find the user to update by ID (replace with your actual logic)
-      const userId = req.params.userId; // Assuming you have a userId parameter in the route
+      const userId = req.params.userId; 
       const user = await User.findById(userId);
   
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
   
-      // Update user properties
       user.nom = nom || user.nom;
       user.prenom = prenom || user.prenom;
       user.email = email || user.email;
   
       // Hash password if provided
       if (password) {
-        user.password = await hashPassword(password); // Replace with your password hashing function
+        user.password = await hashPassword(password); 
       }
   
       user.birthdate = birthdate || user.birthdate;

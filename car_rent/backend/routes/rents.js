@@ -9,7 +9,7 @@ router.get('/getAllByUser/:userId', rentController.getRentsByUserId);
 router.patch('/updateStatus/:id', rentController.updateRentStatus);
 router.delete('/deleteRent/:id', rentController.deleteRent);
 router.get('/getRentDates/:vehicleId', rentController.getRentDatesByVehicleId);
-router.get('/totalAcceptedRentPrice', rentController.getTotalAcceptedRentPrice);
+router.get('/totalAcceptedRentPrice/:agencyId', rentController.getTotalAcceptedRentPrice);
 
 router.get('/daily', rentController.getDailyRents);
 router.get('/weekly', rentController.getWeeklyRents);
